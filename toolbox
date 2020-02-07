@@ -46,11 +46,12 @@ _toolbox_version_check() {
       rm -rf toolbox_online.txt &>/dev/null
     else
       echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
-      echo "Starting Update ..."
+      echo "Starting ToolBox Update ..."
       rm -rf toolbox &>/dev/null
       wget https://raw.githubusercontent.com/puxplaying/ToolBox/master/toolbox &>/dev/null
       chmod a+rx toolbox
       rm -rf toolbox_online.txt &>/dev/null
+      echo "... ToolBox updated to latest Git version!"
 
 fi
 }
@@ -70,11 +71,12 @@ _manjaro_update_version_check() {
       rm -rf manjaro_update_online.txt &>/dev/null
     else
       echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
-      echo "Starting Update ..."
+      echo "Starting manjaro_update Update ..."
       rm -rf manjaro_update &>/dev/null
       wget https://raw.githubusercontent.com/puxplaying/manjaro-update/master/manjaro_update &>/dev/null
       chmod a+rx manjaro_update
       rm -rf manjaro_update_online.txt &>/dev/null
+      echo "... manjaro_update updated to latest Git version!"
 
 fi
 }
@@ -94,11 +96,12 @@ _releasecompare_version_check() {
       rm -rf releasecompare_online.txt &>/dev/null
     else
       echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
-      echo "Starting Update ..."
+      echo "Starting releasecompare Update ..."
       rm -rf releasecompare &>/dev/null
       wget https://raw.githubusercontent.com/puxplaying/releasecompare/master/releasecompare &>/dev/null
       chmod a+rx releasecompare
       rm -rf releasecompare_online.txt &>/dev/null
+      echo "... releasecompare updated to latest Git version!"
 
 fi
 }
@@ -118,11 +121,12 @@ _pacui_version_check() {
       rm -rf pacui_online.txt &>/dev/null
     else
       echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
-      echo "Starting Update ..."
+      echo "Starting PacUI Update ..."
       rm -rf pacui &>/dev/null
       wget https://raw.githubusercontent.com/excalibur1234/pacui/master/pacui &>/dev/null
       chmod a+rx pacui
       rm -rf pacui_online.txt &>/dev/null
+      echo "... PacUI updated to latest Git version!"
 
 fi
 }
@@ -140,7 +144,7 @@ _update_check() {
 	then
 		_toolbox_version_check
 	fi
-  
+
 }
 #
 # =======================
