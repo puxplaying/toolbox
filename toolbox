@@ -52,6 +52,7 @@ _toolbox_version_check() {
       chmod a+rx toolbox
       rm -rf toolbox_online.txt &>/dev/null
       echo "... ToolBox updated to latest Git version!"
+      echo -e "\e[41m Please restart ToolBox! \e[0m"
 
 fi
 }
