@@ -135,8 +135,12 @@ _update_check() {
   _manjaro_update_version_check
   _releasecompare_version_check
   _pacui_version_check
-  _toolbox_version_check
 
+  if [[ -f toolboxpath.txt ]]
+	then
+		_toolbox_version_check
+	fi
+  
 }
 #
 # =======================
