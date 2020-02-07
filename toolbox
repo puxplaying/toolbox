@@ -60,7 +60,7 @@ _toolbox_version_check() {
   toolbox="cat toolboxpath.txt"
   cd $toolbox
   rm -rf toolbox
-  wget https://raw.githubusercontent.com/excalibur1234/pacui/master/pacui
+  wget https://raw.githubusercontent.com/puxplaying/ToolBox/master/toolbox
   chmod a+rx toolbox
 
 fi
@@ -182,6 +182,7 @@ _update_check() {
   _manjaro_update_version_check
   _releasecompare_version_check
   _pacui_version_check
+  _toolbox_version_check
 
 }
 #
@@ -203,6 +204,7 @@ _initupdate() {
     _manjaro_update_first_check
     _releasecompare_first_check
     _pacui_first_check
+    _toolbox_first_check
 
   else
     echo "ToolBox Data found!"
