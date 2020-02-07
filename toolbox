@@ -23,153 +23,106 @@ if [ "$DIR" != "$RDIR" ]; then
 fi
 #echo "DIR is '$DIR'"
 rm $HOME/.cache/toolbox/update-cache/toolboxpath.txt &>/dev/null
-echo "$DIR" >> $HOME/.cache/toolbox/update-cache/toolboxpath.txt
+echo "$DIR" >> $HOME/.cache/toolbox/toolboxpath.txt
 }
 #
 # Download latest version of PacUI - Releasecompare - Manjao Update
 # =======================
 #
-_toolbox_first_check() {
-  if [[ -f toolbox.txt ]]
-	then
-		#echo " file found ... "
-    return;
-
-  else
-    wget https://github.com/puxplaying/ToolBox/commits/master &>/dev/null
-    grep -owPc "Commits on *" master | tee toolbox.txt &>/dev/null
-    rm -rf master
-
-	fi
-}
-#
 _toolbox_version_check() {
-  cd $HOME/.cache/toolbox/update-cache
-  REMOTEMD5=$(md5sum 'toolbox.txt' | cut -d" " -f1)
-  LOCALMD5=$(md5sum 'toolbox_online.txt' | cut -d" " -f1)
-  wget https://github.com/puxplaying/ToolBox/commits/master &>/dev/null
-  grep -owPc "Commits on *" master | tee toolbox_online.txt &>/dev/null
-  rm -rf master
-
-  if [ "$LOCALMD5" == "$REMOTEMD5" ]
-  then
-  echo -e "\e[1m ToolBox \e[0m- is Up to date!"
-  else
-  echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
-  echo "Starting Update ..."
   toolbox="$(cat toolboxpath.txt)"
   cd $toolbox
-  rm -rf toolbox
-  wget https://raw.githubusercontent.com/puxplaying/ToolBox/master/toolbox
-  chmod a+rx toolbox
+  wget https://raw.githubusercontent.com/puxplaying/ToolBox/master/toolbox &>/dev/null
+  cat toolbox.* | tee toolbox_online.txt &>/dev/null
+  rm -rf toolbox.* &>/dev/null
+
+  REMOTEMD5=$(md5sum 'toolbox' | cut -d" " -f1)
+  LOCALMD5=$(md5sum 'toolbox_online.txt' | cut -d" " -f1)
+
+
+    if [ "$LOCALMD5" == "$REMOTEMD5" ]
+    then
+      echo -e "\e[1m ToolBox \e[0m- is Up to date!"
+      rm -rf toolbox_online.txt &>/dev/null
+    else
+      echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
+      echo "Starting Update ..."
+      rm -rf toolbox &>/dev/null
+      wget https://raw.githubusercontent.com/puxplaying/ToolBox/master/toolbox &>/dev/null
+      chmod a+rx toolbox
+      rm -rf toolbox_online.txt &>/dev/null
 
 fi
-}
-#
-_manjaro_update_first_check() {
-	if [[ -f manjaro_update.txt ]]
-	then
-		#echo " file found ... "
-    return;
-
-  else
-    wget https://github.com/puxplaying/manjaro-update/commits/master &>/dev/null
-    grep -owPc "Commits on *" master | tee manjaro_update.txt &>/dev/null
-    rm -rf master
-
-	fi
 }
 #
 _manjaro_update_version_check() {
-  cd $HOME/.cache/toolbox/update-cache
-  REMOTEMD5=$(md5sum 'manjaro_update.txt' | cut -d" " -f1)
-  LOCALMD5=$(md5sum 'manjaro_update_online.txt' | cut -d" " -f1)
-  wget https://github.com/puxplaying/manjaro-update/commits/master &>/dev/null
-  grep -owPc "Commits on *" master | tee manjaro_update_online.txt &>/dev/null
-  rm -rf master
+  wget https://raw.githubusercontent.com/puxplaying/manjaro-update/master/manjaro_update &>/dev/null
+  cat manjaro_update.* | tee manjaro_update_online.txt &>/dev/null
+  rm -rf manjaro_update.* &>/dev/null
 
-  if [ "$LOCALMD5" == "$REMOTEMD5" ]
-  then
-  echo -e "\e[1m manjaro_update \e[0m- is Up to date!"
-  else
-  echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
-  echo "Starting Update ..."
-  cd $HOME/.cache/toolbox
-  rm -rf manjaro_update
-  wget https://raw.githubusercontent.com/puxplaying/manjaro-update/master/manjaro_update
-  chmod a+rx manjaro_update
+  REMOTEMD5=$(md5sum 'manjaro_update' | cut -d" " -f1)
+  LOCALMD5=$(md5sum 'manjaro_update_online.txt' | cut -d" " -f1)
+
+
+    if [ "$LOCALMD5" == "$REMOTEMD5" ]
+    then
+      echo -e "\e[1m manjaro_update \e[0m- is Up to date!"
+      rm -rf manjaro_update_online.txt &>/dev/null
+    else
+      echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
+      echo "Starting Update ..."
+      rm -rf manjaro_update &>/dev/null
+      wget https://raw.githubusercontent.com/puxplaying/manjaro-update/master/manjaro_update &>/dev/null
+      chmod a+rx manjaro_update
+      rm -rf manjaro_update_online.txt &>/dev/null
 
 fi
-}
-#
-_releasecompare_first_check() {
-  if [[ -f releasecompare.txt ]]
-	then
-		#echo " file found ... "
-    return;
-
-  else
-    wget https://github.com/puxplaying/releasecompare/commits/master &>/dev/null
-    grep -owPc "Commits on *" master | tee releasecompare.txt &>/dev/null
-    rm -rf master
-
-	fi
 }
 #
 _releasecompare_version_check() {
-  cd $HOME/.cache/toolbox/update-cache
-  REMOTEMD5=$(md5sum 'releasecompare.txt' | cut -d" " -f1)
-  LOCALMD5=$(md5sum 'releasecompare_online.txt' | cut -d" " -f1)
-  wget https://github.com/puxplaying/releasecompare/commits/master &>/dev/null
-  grep -owPc "Commits on *" master | tee releasecompare_online.txt &>/dev/null
-  rm -rf master
+  wget https://raw.githubusercontent.com/puxplaying/releasecompare/master/releasecompare &>/dev/null
+  cat releasecompare.* | tee releasecompare_online.txt &>/dev/null
+  rm -rf releasecompare.* &>/dev/null
 
-  if [ "$LOCALMD5" == "$REMOTEMD5" ]
-  then
-  echo -e "\e[1m releasecompare \e[0m- is Up to date!"
-  else
-  echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
-  echo "Starting Update ..."
-  cd $HOME/.cache/toolbox
-  rm -rf releasecompare
-  wget https://raw.githubusercontent.com/puxplaying/releasecompare/master/releasecompare
-  chmod a+rx releasecompare
+  REMOTEMD5=$(md5sum 'releasecompare' | cut -d" " -f1)
+  LOCALMD5=$(md5sum 'releasecompare_online.txt' | cut -d" " -f1)
+
+
+    if [ "$LOCALMD5" == "$REMOTEMD5" ]
+    then
+      echo -e "\e[1m releasecompare \e[0m- is Up to date!"
+      rm -rf releasecompare_online.txt &>/dev/null
+    else
+      echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
+      echo "Starting Update ..."
+      rm -rf releasecompare &>/dev/null
+      wget https://raw.githubusercontent.com/puxplaying/releasecompare/master/releasecompare &>/dev/null
+      chmod a+rx releasecompare
+      rm -rf releasecompare_online.txt &>/dev/null
 
 fi
 }
 #
-_pacui_first_check() {
-  if [[ -f pacui.txt ]]
-	then
-		#echo " file found ... "
-    return;
-
-  else
-    wget https://github.com/excalibur1234/pacui/commits/master &>/dev/null
-    grep -owPc "Commits on *" master | tee pacui.txt &>/dev/null
-    rm -rf master
-
-	fi
-}
-#
 _pacui_version_check() {
-  cd $HOME/.cache/toolbox/update-cache
-  REMOTEMD5=$(md5sum 'pacui.txt' | cut -d" " -f1)
-  LOCALMD5=$(md5sum 'pacui_online.txt' | cut -d" " -f1)
-  wget https://github.com/excalibur1234/pacui/commits/master &>/dev/null
-  grep -owPc "Commits on *" master | tee pacui_online.txt &>/dev/null
-  rm -rf master
+  wget https://raw.githubusercontent.com/excalibur1234/pacui/master/pacui &>/dev/null
+  cat pacui.* | tee pacui_online.txt &>/dev/null
+  rm -rf pacui.* &>/dev/null
 
-  if [ "$LOCALMD5" == "$REMOTEMD5" ]
-  then
-  echo -e "\e[1m PacUI \e[0m- is Up to date!"
-  else
-  echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
-  echo "Starting Update ..."
-  cd $HOME/.cache/toolbox
-  rm -rf pacui
-  wget https://raw.githubusercontent.com/excalibur1234/pacui/master/pacui
-  chmod a+rx pacui
+  REMOTEMD5=$(md5sum 'pacui' | cut -d" " -f1)
+  LOCALMD5=$(md5sum 'pacui_online.txt' | cut -d" " -f1)
+
+
+    if [ "$LOCALMD5" == "$REMOTEMD5" ]
+    then
+      echo -e "\e[1m PacUI \e[0m- is Up to date!"
+      rm -rf pacui_online.txt &>/dev/null
+    else
+      echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
+      echo "Starting Update ..."
+      rm -rf pacui &>/dev/null
+      wget https://raw.githubusercontent.com/excalibur1234/pacui/master/pacui &>/dev/null
+      chmod a+rx pacui
+      rm -rf pacui_online.txt &>/dev/null
 
 fi
 }
@@ -177,12 +130,12 @@ fi
 # =======================
 # Update Checker
 _update_check() {
-  test -d "$HOME/.cache/toolbox/update-cache" || mkdir -p "$HOME/.cache/toolbox/update-cache" && cd $HOME/.cache/toolbox/update-cache
+  cd $HOME/.cache/toolbox
   echo "Checking for Updates ..."
   _manjaro_update_version_check
   _releasecompare_version_check
   _pacui_version_check
-  _toolbox_version_check
+  #_toolbox_version_check
 
 }
 #
@@ -198,13 +151,7 @@ _initupdate() {
     wget https://raw.githubusercontent.com/puxplaying/manjaro-update/master/manjaro_update &>/dev/null
     wget https://raw.githubusercontent.com/puxplaying/releasecompare/master/releasecompare &>/dev/null
     wget https://raw.githubusercontent.com/excalibur1234/pacui/master/pacui &>/dev/null
-    # wget toolbox .... nicht vergessen
     chmod a+rx pacui releasecompare manjaro_update
-    test -d "$HOME/.cache/toolbox/update-cache" || mkdir -p "$HOME/.cache/toolbox/update-cache" && cd $HOME/.cache/toolbox/update-cache
-    _manjaro_update_first_check
-    _releasecompare_first_check
-    _pacui_first_check
-    _toolbox_first_check
 
   else
     echo "ToolBox Data found!"
