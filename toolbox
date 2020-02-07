@@ -57,7 +57,7 @@ _toolbox_version_check() {
   else
   echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
   echo "Starting Update ..."
-  toolbox="cat toolboxpath.txt"
+  toolbox="$(cat toolboxpath.txt)"
   cd $toolbox
   rm -rf toolbox
   wget https://raw.githubusercontent.com/puxplaying/ToolBox/master/toolbox
