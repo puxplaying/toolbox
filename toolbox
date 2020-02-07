@@ -22,7 +22,7 @@ if [ "$DIR" != "$RDIR" ]; then
   echo "DIR '$RDIR' resolves to '$DIR'"
 fi
 #echo "DIR is '$DIR'"
-rm $HOME/.cache/toolbox/update-cache/toolboxpath.txt &>/dev/null
+rm $HOME/.cache/toolbox/toolboxpath.txt &>/dev/null
 echo "$DIR" >> $HOME/.cache/toolbox/toolboxpath.txt
 }
 #
