@@ -135,7 +135,6 @@ _update_check() {
   _manjaro_update_version_check
   _releasecompare_version_check
   _pacui_version_check
-  _toolbox_sourcefile
   _toolbox_version_check
 
 }
@@ -156,6 +155,7 @@ _initupdate() {
 
   else
     echo "ToolBox Data found!"
+    _toolbox_sourcefile
 
   fi
 }
