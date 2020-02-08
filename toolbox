@@ -181,6 +181,7 @@ _ranger_version_check() {
     rm -rf "$HOME/.cache/toolbox/ranger-master"
     wget https://github.com/ranger/ranger/archive/master.zip &>/dev/null
     unzip master.zip &>/dev/null
+    cp master.zip ranger-master &>/dev/null
     rm -rf master.zip &>/dev/null
     echo -e "\e[1m Ranger \e[0m- is Up to date!"
 
