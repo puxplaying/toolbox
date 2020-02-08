@@ -40,6 +40,7 @@ echo "$DIR" >> $HOME/.cache/toolbox/toolboxpath.txt # Write path of ToolBox to a
 # Compare and Download latest version of PacUI - Releasecompare - Manjao Update - ToolBox
 # This functions run in _update_check
 #
+# ToolBox Update Check
 _toolbox_version_check() {
   toolbox="$(cat toolboxpath.txt)" # Check where the ToolBox script is located to be able to update it
   cd $toolbox
@@ -71,6 +72,7 @@ _toolbox_version_check() {
 fi
 }
 #
+# manjaro_update - Update Check
 _manjaro_update_version_check() {
   wget https://raw.githubusercontent.com/puxplaying/manjaro-update/master/manjaro_update &>/dev/null
   cat manjaro_update.* | tee manjaro_update_online.txt &>/dev/null
@@ -98,6 +100,7 @@ _manjaro_update_version_check() {
 fi
 }
 #
+# releasecompare Update Check
 _releasecompare_version_check() {
   wget https://raw.githubusercontent.com/puxplaying/releasecompare/master/releasecompare &>/dev/null
   cat releasecompare.* | tee releasecompare_online.txt &>/dev/null
@@ -125,6 +128,7 @@ _releasecompare_version_check() {
 fi
 }
 #
+# PacUI Update Check
 _pacui_version_check() {
   wget https://raw.githubusercontent.com/excalibur1234/pacui/master/pacui &>/dev/null
   cat pacui.* | tee pacui_online.txt &>/dev/null
