@@ -156,6 +156,35 @@ _pacui_version_check() {
 fi
 }
 #
+#
+# Ranger Update Check
+_ranger_version_check() {
+  test -d "$HOME/.cache/toolbox/temp" || mkdir -p "$HOME/.cache/toolbox/temp" && cd $HOME/.cache/toolbox/temp
+  wget https://github.com/ranger/ranger/archive/master.zip &>/dev/null
+  unzip master.zip &>/dev/null
+
+  REMOTEMD5=$(tar -cf - master.zip | md5sum | cut -d" " -f1)
+  LOCALMD5=$(tar -cf - master.zip | md5sum | cut -d" " -f1)
+
+  if [ "$LOCALMD5" == "$REMOTEMD5" ]
+  then
+    echo -e "\e[1m Ranger \e[0m- is Up to date!"
+    cd $HOME/.cache/toolbox
+    rm -rf "$HOME/.cache/toolbox/temp"
+  else
+    printf '\33[H\33[2J'
+    echo -e "no match, Local:"$LOCALMD5"\nRemote:"$REMOTEMD5
+    echo "Starting Ranger Update ..."
+    cd $HOME/.cache/toolbox
+    rm -rf "$HOME/.cache/toolbox/ranger-master"
+    wget https://github.com/ranger/ranger/archive/master.zip &>/dev/null
+    unzip master.zip &>/dev/null
+    rm -rf master.zip &>/dev/null
+    echo -e "\e[1m Ranger \e[0m- is Up to date!"
+
+fi
+}
+#
 # =======================
 # Update Checker - Option 00
 _update_check() {
@@ -164,10 +193,12 @@ _update_check() {
   _manjaro_update_version_check
   _releasecompare_version_check
   _pacui_version_check
+  _ranger_version_check
 
   if [[ -f toolboxpath.txt ]] # Check for ToolBox directory
 	then
 		_toolbox_version_check
+    #echo "toolbox test"
 	fi
 
 }
@@ -185,6 +216,10 @@ _initupdate() {
     wget https://raw.githubusercontent.com/puxplaying/manjaro-update/master/manjaro_update &>/dev/null
     wget https://raw.githubusercontent.com/puxplaying/releasecompare/master/releasecompare &>/dev/null
     wget https://raw.githubusercontent.com/excalibur1234/pacui/master/pacui &>/dev/null
+    wget https://github.com/ranger/ranger/archive/master.zip &>/dev/null
+    unzip master.zip &>/dev/null
+    cp master.zip ranger-master &>/dev/null
+    rm -rf master.zip &>/dev/null
     chmod a+rx pacui releasecompare manjaro_update
 
   else
@@ -264,8 +299,10 @@ do
     echo -e "      |   \e[7m 5 \e[0m  \e[1mD\e[0mmesg                  |   \e[7m 6 \e[0m  CPU \e[1mF\e[0mrequency Info     |"
     echo -e "      |-------------------------------|-------------------------------|"
     echo -e "      |   \e[7m 7 \e[0m  \e[1mP\e[0macUI (Git Version)    |   \e[7m 8 \e[0m  \e[1mT\e[0mranslate \e[1mS\e[0mhell        |"
+    echo -e "      |-------------------------------|-------------------------------|"
+    echo -e "      |   \e[7m 9 \e[0m  \e[1mRa\e[0mnger                 |   \e[7m 10 \e[0m \e[1mT\e[0mranslate \e[1mS\e[0mhell        |"
     echo -e "      *---------------------------------------------------------------*"
-    echo -e "          \e[7m00 \e[0m  \e[1mU\e[0mpdate ToolBox and applications"
+    echo -e "          \e[7m 00 \e[0m \e[1mU\e[0mpdate ToolBox and applications"
     echo ""
     echo -e "               Enter number or marked letter(s)   -   \e[7m 0 \e[0m \e[1mQ\e[0muit "
 
@@ -336,6 +373,14 @@ do
             printf '\33[H\33[2J'
             gawk -f <(curl -Ls git.io/translate) -- -shell
             echo
+            ;;
+        9|ra|RA|ranger|Ranger )
+            printf '\33[H\33[2J'
+            cd "$HOME/.cache/toolbox/ranger-master"
+            ./ranger.py
+            echo
+            echo -e " \e[41m Displaying Ranger. To return to ToolBox press ENTER \e[0m"
+            read -r
             ;;
 
         00|U|u )
