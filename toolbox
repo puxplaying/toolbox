@@ -65,7 +65,9 @@ _toolbox_version_check() {
       wget https://raw.githubusercontent.com/puxplaying/ToolBox/master/toolbox &>/dev/null
       chmod a+rx toolbox
       rm -rf toolbox_online.txt &>/dev/null
+      rm -rf "$HOME/.cache/toolbox"
       echo "... ToolBox updated to latest Git version!"
+      echo "... Cache Deleted!"
       echo -e "\e[41m Please restart ToolBox! \e[0m"
       echo ""
 
