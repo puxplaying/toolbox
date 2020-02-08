@@ -10,6 +10,7 @@ SHELL=/usr/bin/bash
 #  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
+# =======================
 # Detect the source where ToolBox is run from to be able to Update it
 _toolbox_sourcefile() {
   SOURCE="${BASH_SOURCE[0]}"
@@ -32,24 +33,26 @@ if [ "$DIR" != "$RDIR" ]; then
 fi
 #echo "DIR is '$DIR'"
 rm $HOME/.cache/toolbox/toolboxpath.txt &>/dev/null
-echo "$DIR" >> $HOME/.cache/toolbox/toolboxpath.txt
+echo "$DIR" >> $HOME/.cache/toolbox/toolboxpath.txt # Write path of ToolBox to a file to be able to read from it
 }
 #
-# Download latest version of PacUI - Releasecompare - Manjao Update
 # =======================
+# Compare and Download latest version of PacUI - Releasecompare - Manjao Update - ToolBox
+# This functions run in _update_check
 #
 _toolbox_version_check() {
-  toolbox="$(cat toolboxpath.txt)"
+  toolbox="$(cat toolboxpath.txt)" # Check where the ToolBox script is located to be able to update it
   cd $toolbox
-  wget https://raw.githubusercontent.com/puxplaying/ToolBox/master/toolbox &>/dev/null
+  wget https://raw.githubusercontent.com/puxplaying/ToolBox/master/toolbox &>/dev/null # Download online version
   cat toolbox.* | tee toolbox_online.txt &>/dev/null
-  rm -rf toolbox.* &>/dev/null
+  rm -rf toolbox.* &>/dev/null # Clean temp files
 
+  # Get md5sum of local and online version
   REMOTEMD5=$(md5sum 'toolbox' | cut -d" " -f1)
   LOCALMD5=$(md5sum 'toolbox_online.txt' | cut -d" " -f1)
 
-
-    if [ "$LOCALMD5" == "$REMOTEMD5" ]
+    # Compare md5sum of local and online version
+    if [ "$LOCALMD5" == "$REMOTEMD5" ] # If md5sums are the same
     then
       echo -e "\e[1m ToolBox \e[0m- is Up to date!"
       rm -rf toolbox_online.txt &>/dev/null
@@ -150,7 +153,7 @@ fi
 }
 #
 # =======================
-# Update Checker
+# Update Checker - Option 00
 _update_check() {
   cd $HOME/.cache/toolbox
   echo "Checking for Updates ..."
@@ -158,7 +161,7 @@ _update_check() {
   _releasecompare_version_check
   _pacui_version_check
 
-  if [[ -f toolboxpath.txt ]]
+  if [[ -f toolboxpath.txt ]] # Check for ToolBox directory
 	then
 		_toolbox_version_check
 	fi
@@ -166,7 +169,8 @@ _update_check() {
 }
 #
 # =======================
-# Make a update check option for everything and try to replace cmatrix
+# First launch Check for requiered scripts
+# Make a directory in "$HOME/.cache/toolbox" where all scripts will be stored and check for its existence on start of ToolBox.
 _initupdate() {
   if [ ! -d "$HOME/.cache/toolbox" ]
   then
@@ -181,7 +185,7 @@ _initupdate() {
 
   else
     echo "ToolBox Data found!"
-    _toolbox_sourcefile
+    _toolbox_sourcefile # Recreate the the source file location of ToolBox on restart in case the script has been moved.
 
   fi
 }
@@ -189,6 +193,7 @@ _initupdate() {
 _initupdate
 #
 # =======================
+# Startmenu for releasecompare
 _releasecompare_startmenu() {
   echo ""
   echo -e "\e[7m This tool will compare the latest Manjaro release to the local system \e[0m"
