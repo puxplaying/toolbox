@@ -62,6 +62,7 @@ _toolbox_version_check() {
       rm -rf toolbox_online.txt &>/dev/null
       echo "... ToolBox updated to latest Git version!"
       echo -e "\e[41m Please restart ToolBox! \e[0m"
+      echo ""
 
 fi
 }
@@ -87,6 +88,7 @@ _manjaro_update_version_check() {
       chmod a+rx manjaro_update
       rm -rf manjaro_update_online.txt &>/dev/null
       echo "... manjaro_update updated to latest Git version!"
+      echo ""
 
 fi
 }
@@ -112,6 +114,7 @@ _releasecompare_version_check() {
       chmod a+rx releasecompare
       rm -rf releasecompare_online.txt &>/dev/null
       echo "... releasecompare updated to latest Git version!"
+      echo ""
 
 fi
 }
@@ -137,6 +140,7 @@ _pacui_version_check() {
       chmod a+rx pacui
       rm -rf pacui_online.txt &>/dev/null
       echo "... PacUI updated to latest Git version!"
+      echo ""
 
 fi
 }
