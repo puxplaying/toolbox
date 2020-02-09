@@ -5,7 +5,7 @@ How to run:
 - ```chmod a+rx toolbox```
 - ```./toolbox```
 
-This tool updates itself and included terminal applications to the latest online version with the [00] option.
+This tool updates itself and included applications to the latest online release if a new version was found - with the [00] option.
 
 All files are stored in ``` $HOME/.cache/toolbox ```
 
