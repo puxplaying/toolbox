@@ -1,5 +1,5 @@
 # ToolBox
-Collection of terminal applications for Manjaro.
+Collection of terminal applications for Manjaro TUI.
 
 This tool updates itself and included terminal applications to the latest online version with the [00] option.
 
