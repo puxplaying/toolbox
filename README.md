@@ -24,7 +24,7 @@ Requires: ```inxi``` - ```meld``` - ```pamac-cli``` (optional)
 List of applications it makes use of:
 
 - [1] [manjaro-update](https://github.com/puxplaying/manjaro-update/blob/master/README.md)
-- [2] [releasecompare](https://github.com/puxplaying/releasecompare/blob/master/README.md)
+- [2] [releasecompare](https://github.com/puxplaying/releasecompare/blob/master/README.md) - Manjaro Specific!
 - [3] [System Information](https://github.com/smxi/inxi/blob/master/README.txt) - ```inxi -Fxxxza --no-host``` | ```df -h``` | ```lsblk```
 - [4] Show Journal Errors - ```journalctl -p 3 -xb```
 - [5] Dmesg - ```sudo dmesg | less```
