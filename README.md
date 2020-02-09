@@ -1,5 +1,5 @@
 # ToolBox
-Collection of terminal applications for Manjaro (Bash TUI).
+Collection of terminal applications for Manjaro and Arch based Systems (Bash TUI).
 
 How to run:
 - ```chmod a+rx toolbox```
