@@ -8,6 +8,8 @@ List of included applications: [manjaro-update](https://github.com/puxplaying/ma
 
 All files are stored in ``` $HOME/.cache/toolbox ```
 
+Requires: ```inxi``` - ```meld``` - ```pamac-cli``` (optional)
+
 List of applications it makes use of:
 
 - [1] [manjaro-update](https://github.com/puxplaying/manjaro-update/blob/master/README.md)
