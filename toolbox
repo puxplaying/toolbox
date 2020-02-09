@@ -158,7 +158,6 @@ _pacui_version_check() {
 fi
 }
 #
-#
 # Ranger Update Check
 _ranger_version_check() {
   test -d "$HOME/.cache/toolbox/temp" || mkdir -p "$HOME/.cache/toolbox/temp" && cd $HOME/.cache/toolbox/temp
@@ -188,6 +187,31 @@ _ranger_version_check() {
 fi
 }
 #
+# Browsh Browser Update Check
+_browsh_version_check() {
+  # Online Version
+  VERSION=$(curl -s https://github.com/browsh-org/browsh/releases/latest/download 2>&1 | grep -Po [0-9]+\.[0-9]+\.[0-9]+)
+  #echo Online Version: $VERSION
+  # Local Version
+  VERSION2=$(echo browsh* 2>&1 | grep -Po [0-9]+\.[0-9]+\.[0-9]+)
+  #echo Local Version: $VERSION2
+
+  if [ "$VERSION" == "$VERSION2" ]
+  then
+    echo -e "\e[1m Browsh \e[0m- is Up to date!"
+  else
+    printf '\33[H\33[2J'
+    echo -e "no match, Local:"$VERSION2"\nRemote:"$VERSION
+    echo "Starting Browsh Update ..."
+    rm -rf browsh* &>/dev/null
+    wget https://github.com/browsh-org/browsh/releases/download/v$VERSION/browsh_"$VERSION"_linux_amd64 &>/dev/null
+    chmod a+rx browsh*
+    echo "... Browsh updated to latest release version!"
+    echo ""
+
+fi
+}
+#
 # =======================
 # Update Checker - Option 00
 _update_check() {
@@ -197,6 +221,7 @@ _update_check() {
   _releasecompare_version_check
   _pacui_version_check
   _ranger_version_check
+  _browsh_version_check
 
   if [[ -f toolboxpath.txt ]] # Check for ToolBox directory
 	then
@@ -223,7 +248,8 @@ _initupdate() {
     unzip master.zip &>/dev/null
     cp master.zip ranger-master &>/dev/null
     rm -rf master.zip &>/dev/null
-    chmod a+rx pacui releasecompare manjaro_update
+    _browsh_version_check
+    chmod a+rx pacui releasecompare manjaro_update browsh*
 
   else
     echo "ToolBox Data found!"
@@ -303,7 +329,7 @@ do
     echo -e "      |-------------------------------|-------------------------------|"
     echo -e "      |   \e[7m 7 \e[0m  \e[1mP\e[0macUI (Git Version)    |   \e[7m 8 \e[0m  \e[1mT\e[0mranslate \e[1mS\e[0mhell        |"
     echo -e "      |-------------------------------|-------------------------------|"
-    echo -e "      |   \e[7m 9 \e[0m  \e[1mRa\e[0mnger                 |   \e[7m 10 \e[0m \e[1mT\e[0mranslate \e[1mS\e[0mhell        |"
+    echo -e "      |   \e[7m 9 \e[0m  \e[1mRa\e[0mnger (File Mananger) |   \e[7m 10 \e[0m \e[1mB\e[0mrowsh (Web Browser)   |"
     echo -e "      *---------------------------------------------------------------*"
     echo -e "          \e[7m 00 \e[0m \e[1mU\e[0mpdate ToolBox and applications"
     echo ""
@@ -383,6 +409,15 @@ do
             ./ranger.py
             echo
             echo -e " \e[41m Displaying Ranger. To return to ToolBox press ENTER \e[0m"
+            read -r
+            ;;
+
+        10|B|b|browsh|Browsh )
+            printf '\33[H\33[2J'
+            cd "$HOME/.cache/toolbox"
+            ./browsh*
+            echo
+            echo -e " \e[41m Displaying Browsh. To return to ToolBox press ENTER \e[0m"
             read -r
             ;;
 
