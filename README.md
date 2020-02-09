@@ -1,5 +1,9 @@
 # ToolBox
-Collection of terminal applications for Manjaro TUI.
+Collection of terminal applications for Manjaro (Bash TUI).
+
+How to run:
+- ```chmod a+rx toolbox```
+- ```./toolbox```
 
 This tool updates itself and included terminal applications to the latest online version with the [00] option.
 
