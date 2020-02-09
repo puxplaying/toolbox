@@ -13,7 +13,7 @@ It downloads the included applications at first start or when the ``` $HOME/.cac
 
 ---
 
-List of included applications: [manjaro-update](https://github.com/puxplaying/manjaro-update/blob/master/README.md) - [releasecompare](https://github.com/puxplaying/releasecompare/blob/master/README.md) - [PacUI](https://github.com/excalibur1234/pacui/blob/master/README.md) - [Ranger (File Mananger)](https://github.com/ranger/ranger/blob/master/README.md) - [Browsh (Web Browser)](https://github.com/browsh-org/browsh/blob/master/README.md)
+Included applications: [manjaro-update](https://github.com/puxplaying/manjaro-update/blob/master/README.md) - [releasecompare](https://github.com/puxplaying/releasecompare/blob/master/README.md) - [PacUI](https://github.com/excalibur1234/pacui/blob/master/README.md) - [Ranger (File Mananger)](https://github.com/ranger/ranger/blob/master/README.md) - [Browsh (Web Browser)](https://github.com/browsh-org/browsh/blob/master/README.md)
 
 ---
 
