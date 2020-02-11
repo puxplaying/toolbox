@@ -364,10 +364,6 @@ do
         3|si|system|system-information )
             printf '\33[H\33[2J'
             inxi -Fxxxza --no-host
-            printf '\33[H\33[2J'
-            df -h
-            printf '\33[H\33[2J'
-            lsblk
             echo
             echo -e " \e[41m Displaying System Information. To return to ToolBox press ENTER \e[0m"
             read -r
