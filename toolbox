@@ -358,7 +358,7 @@ do
             printf '\33[H\33[2J'
             _releasecompare_startmenu
             echo
-            echo -e " \e[41m Comparision finished. To return to ToolBox press ENTER \e[0m"
+            echo -e " \e[41m Comparison finished. To return to ToolBox press ENTER \e[0m"
             read -r
             ;;
         3|si|system|system-information )
