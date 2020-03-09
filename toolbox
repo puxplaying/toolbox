@@ -329,7 +329,7 @@ do
     echo -e "      |-------------------------------|-------------------------------|"
     echo -e "      |   \e[7m 7 \e[0m  \e[1mP\e[0macUI (Git Version)    |   \e[7m 8 \e[0m  \e[1mT\e[0mranslate \e[1mS\e[0mhell        |"
     echo -e "      |-------------------------------|-------------------------------|"
-    echo -e "      |   \e[7m 9 \e[0m  \e[1mRa\e[0mnger (File Mananger) |   \e[7m 10 \e[0m \e[1mB\e[0mrowsh (Web Browser)   |"
+    echo -e "      |   \e[7m 9 \e[0m  \e[1mRa\e[0mnger (File Manager)  |   \e[7m 10 \e[0m \e[1mB\e[0mrowsh (Web Browser)   |"
     echo -e "      *---------------------------------------------------------------*"
     echo -e "          \e[7m 00 \e[0m \e[1mU\e[0mpdate ToolBox and applications"
     echo ""
