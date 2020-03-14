@@ -327,7 +327,7 @@ do
     echo -e " \e[1m|\e[0m--------------------------------\e[1m|\e[0m---------------------------------\e[1m|\e[0m"
     echo -e " \e[1m|\e[0m    \e[7m 5  \e[0m  \e[1mD\e[0mmesg                 \e[1m|\e[0m    \e[7m 6  \e[0m  CPU \e[1mF\e[0mrequency Info     \e[1m|\e[0m"
     echo -e " \e[1m|\e[0m--------------------------------\e[1m|\e[0m---------------------------------\e[1m|\e[0m"
-    echo -e " \e[1m|\e[0m    \e[7m 7  \e[0m  \e[1mP\e[0macUI (Git Version)   \e[1m|\e[0m    \e[7m 8  \e[0m  \e[1mT\e[0mranslate \e[1mS\e[0mhell        \e[1m|\e[0m"
+    echo -e " \e[1m|\e[0m    \e[7m 7  \e[0m  \e[1mPac\e[0mkage manager \e[1mUI\e[0m    \e[1m|\e[0m    \e[7m 8  \e[0m  \e[1mT\e[0mranslate \e[1mS\e[0mhell        \e[1m|\e[0m"
     echo -e " \e[1m|\e[0m--------------------------------\e[1m|\e[0m---------------------------------\e[1m|\e[0m"
     echo -e " \e[1m|\e[0m    \e[7m 9  \e[0m  \e[1mRa\e[0mnger (File Manager) \e[1m|\e[0m    \e[7m 10 \e[0m  \e[1mB\e[0mrowsh (Web Browser)   \e[1m|\e[0m"
     echo -e " \e[1m+------------------------------------------------------------------+\e[0m"
@@ -389,7 +389,7 @@ do
             echo -e " \e[41m Displaying frequency-info. To return to ToolBox press ENTER \e[0m"
             read -r
             ;;
-        7|p|pacui )
+        7|p|pac|ui|pacui )
             cd "$HOME/.cache/toolbox"
             ./pacui
             echo
