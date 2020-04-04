@@ -152,8 +152,6 @@ function sysinfo {
     sudo inxi -v8 | tee testfile
     cat testfile| fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
     rm -rf testfile
-    echo
-		#pkexec inxi -v8 | fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
 	else
 		echo "$INSTALLINGINXIMSG"
     if [ - e /var/lib/pacman/db.lck ]
