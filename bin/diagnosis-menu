@@ -36,7 +36,7 @@ function system_diagnosis_ui {
       printf '\33[H\33[2J' # Use this instead of the clear command
 
       echo
-      echo -e "                          $BG$TC System Diagnosis $NC                                     "
+      echo -e "                          $BG$TC System Diagnosis $NC"
       echo -e " $TC+----------------------------------------------------------------+$NC"
       echo -e " $TC|$NC    $BG 1 $NC $E1       $TC|$NC    $BG 2 $NC $E2     $TC|$NC"
       echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
