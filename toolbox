@@ -1,0 +1,330 @@
+#!/bin/bash
+
+# =======================
+# Define Colors
+RED='\e[41m'
+BLUE='\e[44m'
+ORANGE='\e[46m'
+NC='\e[0m' # No color
+BG='\e[7m' # Highlighting Background color
+TC='\e[1m' # Highlighting Text color
+
+# =======================
+# Service messages section
+# Wrong Option
+ERRORMSG="$RED Wrong option $NC"
+TRYAGAINMSG=" Please try again..."
+# File Manager
+INSTALLINGRNG1MSG="Installing ranger to manage files"
+CLIFMNOTINSTMSG="No cli filemanager is installed and Pacman seems to be in use"
+# Task Manager (Htop)
+INSTALLINGHTOPMSG="Installing htop to manage tasks"
+HTOPNOTINSTMSG="Htop is not installed and Pacman seems to be in use"
+# File Search
+RIFLENOTINSTMSG="Rifle is not installed and Pacman seems to be in use"
+# Web Browser
+INSTALLINGCLIBRWOSMSG="Installing elinks to surf the web"
+CLIBROWSNOTINSTMSG="No cli browser installed and Pacman seems to be in use"
+# PacUI
+INSTALLINGPACUIMSG="Installing PacUI for package management"
+PACUINOTINSTMSG="PacUI is not installed and Pacman seems to be in use"
+# mhwd-tui
+INSTALLINGMHWDTUIMSG="Installing mhwd-tui to manage kernels and drivers"
+MHWDTUINOTINSTMSG="Mhwd-tui is not installed and Pacman seems to be in use"
+# inxi
+INSTALLINGINXIMSG="Installing inxi to display system information"
+INXINOTINSTMSG="inxi is not installed and Pacman seems to be in use"
+
+# =======================
+# Main Menu functions
+# PacUI
+function package_manager_ui {
+  if [ -e /usr/bin/pacui ] # If file exists
+  then
+    pacui # Run it
+  else
+    echo "$INSTALLINGPACUIMSG" # Install Message
+    if [ -e /var/lib/pacman/db.lck ] # If file exists
+    then
+      echo "$PACUINOTINSTMSG" # Not installed Message
+    else
+      sudo pacman -Sy pacui && pacui # Else install package and run it
+    fi
+  fi
+}
+
+# mhwd-tui
+function hardware_settings {
+	if [ -e /usr/bin/mhwd-tui ]
+  then
+		mhwd-tui
+	else
+		echo "$INSTALLINGMHWDTUIMSG"
+		if [ -e /var/lib/pacman/db.lck ]
+    then
+			echo "$MHWDTUINOTINSTMSG"
+		else
+			sudo pacman -Sy mhwd-tui && mhwd-tui
+		fi
+	fi
+}
+
+# File Manager
+function cli_filemanager {
+	if [ -e /usr/bin/ranger ]
+  then
+		ranger
+	elif [ -e /usr/bin/mc ]
+  then
+		mc
+	else
+		echo "$INSTALLINGRNG1MSG"
+		if [ - e /var/lib/pacman/db.lck ]
+    then
+			echo "$CLIFMNOTINSTMSG"
+		else
+			sudo pacman -Sy ranger && ranger
+		fi
+	fi
+}
+
+# Web Browser
+function cli_browser {
+	if [ -e /usr/bin/elinks ]
+  then
+		elinks
+	elif [ -e /usr/bin/links ]
+  then
+		links
+	elif [ -e /usr/bin/w3m ]
+  then
+		w3m
+	elif [ -e /usr/bin/lynx ]
+  then
+		lynx
+	else
+    echo "$INSTALLINGCLIBRWOSMSG"
+		if [ -e /var/lib/pacman/db.lck ]
+    then
+			echo "$CLIBROWSNOTINSTMSG"
+		else
+			sudo pacman -Sy elinks && elinks
+		fi
+	fi
+}
+
+# File Search
+function file_finder {
+	if [ -e /usr/bin/rifle ]
+  then
+		rifle $(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")
+	else
+		echo "$INSTALLINGRNG2MSG"
+		if [ - e /var/lib/pacman/db.lck ]
+    then
+			echo "$RIFLENOTINSTMSG"
+		else
+			sudo pacman -Sy ranger && rifle $(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")
+		fi
+	fi
+}
+
+# Taskmanager
+function taskmanager {
+	if [ -e /usr/bin/htop ]
+  then
+		htop
+	else
+		echo "$INSTALLINGHTOPMSG"
+    if [ - e /var/lib/pacman/db.lck ]
+    then
+      echo "$HTOPNOTINSTMSG"
+    else
+		  sudo pacman -Sy htop && htop
+    fi
+	fi
+}
+
+# System Information
+function sysinfo {
+  if [ -e /usr/bin/inxi ]
+  then
+		pkexec inxi -v8 | fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
+	else
+		echo "$INSTALLINGINXIMSG"
+    if [ - e /var/lib/pacman/db.lck ]
+    then
+      echo "$INXINOTINSTMSG"
+    else
+		  sudo pacman -Sy inxi && inxi -v8 | fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
+    fi
+	fi
+}
+
+# =======================
+# Sub Menu's
+# Startmenu for releasecompare
+function releasecompare_startmenu() {
+  echo ""
+  echo -e "$BLUE This tool will compare the latest Manjaro release to the local system $NC"
+  echo -e "$BLUE to see which applications may have been added to new releases! $NC"
+  echo ""
+  echo -e "$ORANGE Chose what to do! $NC"
+  echo ""
+  echo "  1) Compare only"
+  echo "  2) Installation Options"
+  echo "  0) Quit"
+read -s -n1 choice
+case "$choice" in
+        1)
+            echo "you chose to compare only"
+            releasecompare
+            ;;
+        2)
+            echo "you chose Installation Options"
+            releasecompare install
+            ;;
+        0|3|q|quit)
+            #
+            ;;
+        * ) # do this, if $choice variable contains anything else not offered above
+            echo -e "$ERRORMSG"
+            sleep 2
+            ;;
+    esac
+}
+
+# =======================
+# Main UI code is below
+#
+function main {
+# Define Menu entries which will be run with the echo command
+E0="\e[1mQ\e[0muit"
+E1="\e[1mP\e[0mackage manager UI"
+E2="System \e[1mI\e[0mnformation"
+E3="\e[1mH\e[0mardware and Drivers"
+E4="\e[1mF\e[0mile Manager"
+E5="\e[1mW\e[0meb Browser"
+E6="File \e[1mS\e[0mearch"
+E7="Syste\e[1mm\e[0m & Settings"
+E8="Translate Shel\e[1ml\e[0m"
+E9="Manjaro \e[1mR\e[0melease Compare"
+E10="\e[1mT\e[0mask Manager"
+E11="\e[1mC\e[0mpu Frequency Info"
+E12="System \e[1mD\e[0miagnosis"
+
+# Run infinite loop for UI / menu, till the user quits using the "quit" option or CTRL+C.
+while true
+do
+
+    printf '\33[H\33[2J' # Use this instead of the clear command
+
+    echo
+    echo -e "                              $BG$TC ToolBox $NC                                     "
+    echo -e " $TC+----------------------------------------------------------------+$NC"
+    echo -e " $TC|$NC    $BG 1 $NC $E1      $TC|$NC    $BG 2 $NC $E2     $TC|$NC"
+    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+    echo -e " $TC|$NC    $BG 3 $NC $E3    $TC|$NC    $BG 4 $NC $E4           $TC|$NC"
+    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+    echo -e " $TC|$NC    $BG 5 $NC $E5             $TC|$NC    $BG 6 $NC $E6            $TC|$NC"
+    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+    echo -e " $TC|$NC    $BG 7 $NC $E7 $NC      $TC|$NC    $BG 8 $NC $E8        $TC|$NC"
+    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+    echo -e " $TC|$NC    $BG 9 $NC $E9 $TC|$NC    $BG T $NC $E10           $TC|$NC"
+    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+    echo -e " $TC|$NC    $BG C $NC $E11      $TC|$NC    $BG D $NC $E12       $TC|$NC"
+    echo -e " $TC+----------------------------------------------------------------+$NC"
+    echo -e "      \e[7mEsc\e[0m Refresh the UI"
+    echo ""
+    echo -e "  Enter marked number or letter   -    $BG 0 $NC $E0 "
+
+    # save entered number/letter in variable "choice"
+    read -s -n1 choice
+    # convert "choice" variable to lowercase:
+    choice="$(echo "$choice" | tr '[:upper:]' '[:lower:]' )"
+    echo
+
+
+    # test, whether "choice" fits any of the following numbers or letters
+    case "$choice" in
+
+        1|P|p )
+            package_manager_ui
+            ;;
+        2|I|i )
+            printf '\33[H\33[2J'
+            sysinfo
+            echo
+            echo -e " $RED Displaying System Information. To return to ToolBox press ENTER $NC"
+            # wait for input, e.g. by pressing ENTER:
+            read -r
+            ;;
+        3|H|h )
+            mhwd-tui
+            ;;
+        4|F|f )
+            printf '\33[H\33[2J'
+            echo -e " $RED Press $BG Q $NC$RED to return to ToolBox $NC"
+            sleep 2
+            cli_filemanager
+            ;;
+        5|W|w )
+            printf '\33[H\33[2J'
+            cli_browser
+            echo
+            echo -e " $RED Displaying Web Browser. To return to ToolBox press ENTER $NC"
+            # wait for input, e.g. by pressing ENTER:
+            read -r
+            ;;
+        6|S|s )
+            cd
+            file_finder
+            echo
+            ;;
+        7|M|m )
+            bmenu
+            ;;
+        8|L|l )
+            printf '\33[H\33[2J'
+            gawk -f <(curl -Ls git.io/translate) -- -shell
+            ;;
+        9|R|r )
+            printf '\33[H\33[2J'
+            releasecompare_startmenu
+            cd
+            echo
+            echo -e " $RED Displaying Releasecompare. To return to ToolBox press ENTER $NC"
+            # wait for input, e.g. by pressing ENTER:
+            read -r
+            ;;
+        T|t )
+            printf '\33[H\33[2J'
+            taskmanager
+            ;;
+        C|c )
+            printf '\33[H\33[2J'
+            cpupower frequency-info
+            echo
+            echo -e " $RED Displaying frequency-info. To return to ToolBox press ENTER $NC"
+            read -r
+            ;;
+        D|d )
+            diagnosis-menu
+            ;;
+        0|Q|q )
+            printf '\33[H\33[2J' && exit
+            ;;
+        $'\e'|$'\e'$'\e' ) # Pressing ESC will re-arrange the UI if the terminal has been resized
+            ;;
+        * ) # do this, if $choice variable contains anything else not offered above
+            echo -e "$ERRORMSG"
+            echo -e "$TRYAGAINMSG"
+            sleep 2
+            ;;
+
+    esac # close case-loop
+
+
+done # close while-loop
+}
+main
