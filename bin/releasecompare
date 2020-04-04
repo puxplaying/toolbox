@@ -1,0 +1,407 @@
+#!/usr/bin/bash
+SHELL=/usr/bin/bash
+#
+#  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as
+#  published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+###
+# Make a new folder for the results
+test -d "$HOME/releasecompare" || mkdir -p "$HOME/releasecompare" && cd $HOME/releasecompare
+###
+# Custom URL to *pkgs.txt
+_custom_URL() {
+  printf '\33[H\33[2J'
+  echo
+  echo -e "\e[1m Do you want to remove any existing results? (Recommended) \e[0m"
+  read -r -p "$1 ([y]es or [N]o): "
+  case $(echo "$REPLY" | tr '[:upper:]' '[:lower:]') in
+    y|yes) echo -e "\e[1m yes \e[0m"
+    rm -rf $HOME/releasecompare/*
+
+    echo ""
+    echo -e "Please go to \e[7mhttps://osdn.net/projects/manjaro/storage/\e[0m"
+    echo -e "\e[1m-> Edition\e[0m \e[1m-> Release_Number\e[0m \e[1m-> *pkgs.txt\e[0m and copy the URL."
+    echo ""
+    echo -e "  1) Copy/Paste the URL to *pkgs.txt and press ENTER"
+    echo -e "  0) Quit"
+    read -s -n1 choice
+    case "$choice" in
+            1)
+                echo -e "paste the URL to *pkgs.txt"
+                read -p 'URL: ' uservar
+                wget $uservar
+                file="echo *pkgs.txt"
+
+                # generate list of installed packages
+                pacman -Q > pacman.txt
+
+                # final Comparison
+                cat ${file} | cut -d' ' -f1 > comp1.txt
+                cat pacman.txt | cut -d' ' -f1 > comp2.txt
+                diff -u comp2.txt comp1.txt | grep -E "^\+" | sed '1d'  | cut -c2-  | tee release.txt # Packages from Release which are not installed local
+                diff -u comp1.txt comp2.txt | grep -E "^\+" | sed '1d'  | cut -c2-  | tee userpkglist.txt # Packages installed by User
+
+                # clean up
+                rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt
+
+                _userreleasepkglist
+                printf '\33[H\33[2J'
+                echo ""
+                echo -e "\e[7m The Results Were Saved To: \e[0m"
+                echo -e "\e[1m $HOME/releasecompare \e[0m"
+                echo ""
+                _meld
+                ;;
+
+            0|q)
+                # clean up
+                rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+                ;;
+            * ) echo "invalid option $REPLY"
+                rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+                ;;
+        esac
+;;
+    * ) echo -e "\e[1m no \e[0m"
+    echo ""
+    echo -e "Please go to \e[7mhttps://osdn.net/projects/manjaro/storage/\e[0m"
+    echo -e "\e[1m-> Edition\e[0m \e[1m-> Release_Number\e[0m \e[1m-> *pkgs.txt\e[0m and copy the URL."
+    echo ""
+    echo -e "  1) Copy/Paste the URL to *pkgs.txt and press ENTER"
+    echo -e "  0) Quit"
+    read -s -n1 choice
+    case "$choice" in
+            1)
+                echo -e "paste the URL to *pkgs.txt"
+                read -p 'URL: ' uservar
+                wget $uservar
+                file="echo *pkgs.txt"
+
+                # generate list of installed packages
+                pacman -Q > pacman.txt
+
+                # final Comparison
+                cat ${file} | cut -d' ' -f1 > comp1.txt
+                cat pacman.txt | cut -d' ' -f1 > comp2.txt
+                diff -u comp2.txt comp1.txt | grep -E "^\+" | sed '1d'  | cut -c2-  | tee release.txt # Packages from Release which are not installed local
+                diff -u comp1.txt comp2.txt | grep -E "^\+" | sed '1d'  | cut -c2-  | tee userpkglist.txt # Packages installed by User
+
+                # clean up
+                rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt
+
+                _userreleasepkglist
+                printf '\33[H\33[2J'
+                echo ""
+                echo -e "\e[7m The Results Were Saved To: \e[0m"
+                echo -e "\e[1m $HOME/releasecompare \e[0m"
+                echo ""
+                _meld
+                #rm -rf release-removed-uninstalled.txt
+                ;;
+
+            0|q)
+                # clean up
+                rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+                ;;
+            * ) echo "invalid option $REPLY"
+                rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+                ;;
+        esac
+
+;;
+esac
+
+}
+# Open results in Meld
+_meld () {
+    echo
+    echo -e "\e[1m Do you want to view the results in Meld? \e[0m"
+    read -r -p "$1 ([y]es or [N]o): "
+    case $(echo "$REPLY" | tr '[:upper:]' '[:lower:]') in
+        y|yes) echo -e "\e[1m yes \e[0m"
+        meld release-removed-uninstalled.txt *release.txt
+        ;;
+        * )     echo -e "\e[1m no \e[0m" ;;
+    esac
+}
+###
+# Remove Existing Comparison Results
+_remove_results () {
+    echo
+    echo -e "\e[1m Do you want to remove existing results? \e[0m"
+    read -r -p "$1 ([y]es or [N]o): "
+    case $(echo "$REPLY" | tr '[:upper:]' '[:lower:]') in
+        y|yes) echo -e "\e[1m yes \e[0m"
+        rm -rf $HOME/releasecompare/*
+        _compare
+        _userreleasepkglist
+        printf '\33[H\33[2J'
+        echo ""
+        echo -e "\e[7m The Results Were Saved To: \e[0m"
+        echo -e "\e[1m $HOME/releasecompare \e[0m"
+        echo ""
+        _meld
+        ;;
+        * )     echo -e "\e[1m no \e[0m"
+        _compare
+        rm -rf release-removed-uninstalled.txt ;;
+    esac
+}
+###
+# Create Release pkglist without packages that were uninstalled by the User
+_userreleasepkglist () {
+pacman -Q > pacman.txt
+grep "removed" /var/log/pacman.log | awk -F '[: ]' '{print $6}' | sort  > removed.txt
+#sort removed.txt | uniq -u | tee removed.txt
+file="echo *release.txt"
+cat ${file} > install.txt
+diff --suppress-common-lines removed.txt install.txt | awk -F '<' '{print $1}' | grep ">" | cut -c3- | tee release-removed-uninstalled.txt
+rm -rf 4.txt 5.txt 6.txt comp2.txt ergebnis.txt final.txt install.txt newdiffreverse.txt outfile.txt pacman.txt removed.txt
+
+}
+###
+# Check if comparison files already exist in case of multiple runs with different releases
+_rerun_check () {
+  printf '\33[H\33[2J'
+  if [[ -f $(readlink -e userpkglist.txt) ]]
+  then
+    echo ""
+    echo -e "\e[7m Rerunning the script with existing comparison files \e[0m"
+    echo -e "\e[7m will disable creating the release-removed-uninstalled.txt \e[0m"
+    echo ""
+    _remove_results
+  else
+    _compare
+    _userreleasepkglist
+    printf '\33[H\33[2J'
+    echo ""
+    echo -e "\e[7m The Results Were Saved To: \e[0m"
+    echo -e "\e[1m $HOME/releasecompare \e[0m"
+    echo ""
+    _meld
+
+  fi
+}
+###
+# Edition Choice
+_choise() {
+  printf '\33[H\33[2J'
+  echo ""
+  echo -e "\e[7m Chose the Version to compare \e[0m"
+  echo ""
+  echo "  1) Gnome"
+  echo "  2) KDE"
+  echo "  3) XFCE"
+  echo "  4) Custom URL (Compare any Edition)"
+  echo "  0) Quit"
+read -s -n1 choice
+case "$choice" in
+        1|g)
+            echo "you chose gnome"
+            choice="${1:-gnome}"
+            _rerun_check
+            ;;
+        2|k)
+            echo "you chose kde"
+            choice="${1:-kde}"
+            _rerun_check
+            ;;
+        3|x)
+            echo "you chose xfce"
+            choice="${1:-xfce}"
+            _rerun_check
+            ;;
+        4|u)
+            _custom_URL
+            ;;
+        0|q)
+            ;;
+        * ) echo "invalid option $REPLY"
+            ;;
+    esac
+}
+#
+###
+# Get URL with local release number
+_GetPkgsUrl() {
+  # Get a version number
+  awk -F= '/ID=/{printf $2" "} /RELEASE=/{printf $2" "} /NAME=/{print $2}' /etc/lsb-release | cut -d' ' -f2 > release.txt
+
+  # Print the version number
+  release=$(<release.txt)
+
+  declare iso pkgs
+  pkgs="$(curl -sL https://osdn.net/projects/manjaro/storage/${choice}/${release}/ | sed -e 's/\"/\n/g' | grep -Eo '.*txt$' -m1 )"
+
+  if wget -q "https://osdn.net/projects/manjaro/storage/${choice}/${release}/$pkgs"
+  then
+    # Path to packages file from release
+    file="echo *pkgs.txt"
+
+    # generate list of installed packages
+    pacman -Q > pacman.txt
+
+    # final Comparison
+    cat ${file} | cut -d' ' -f1 > comp1.txt
+    cat pacman.txt | cut -d' ' -f1 > comp2.txt
+    diff -u comp2.txt comp1.txt | grep -E "^\+" | sed '1d'  | cut -c2-  | tee ${choice}-${release}-release.txt # Packages from Release which are not installed local
+    diff -u comp1.txt comp2.txt | grep -E "^\+" | sed '1d'  | cut -c2-  | tee userpkglist.txt # Packages installed by User
+
+    # clean up
+    rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+
+  else
+    rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+    printf '\33[H\33[2J'
+    echo ""
+    echo -e "Something went wrong, local release number does not match online release !!!"
+    echo -e "Trying Redirection!"
+    echo ""
+    sleep 3
+    _GetPkgsUrlRedirection
+
+  fi
+}
+###
+# Get URL via redirection (experimental)
+_GetPkgsUrlRedirection() {
+  # Get *pkgs.txt file from latest release via redirection
+  declare iso url
+  iso="$(curl -sL https://manjaro.osdn.io/${choice}/latest | sed -e 's/\"/\n/g' | grep -Eo 'http.*iso$' -m1 )"
+  url="${iso/.iso/-pkgs.txt}"
+  #curl -sL "$url" | awk '{print $1}' | sort
+  if wget -q "$url"
+  then
+  # Path to packages file from release
+  file="echo *pkgs.txt"
+
+  # generate list of installed packages
+  pacman -Q > pacman.txt
+
+  # final Comparison
+  cat ${file} | cut -d' ' -f1 > comp1.txt
+  cat pacman.txt | cut -d' ' -f1 > comp2.txt
+  diff -u comp2.txt comp1.txt | grep -E "^\+" | sed '1d'  | cut -c2-  | tee release.txt # Packages from Release which are not installed local
+  diff -u comp1.txt comp2.txt | grep -E "^\+" | sed '1d'  | cut -c2-  | tee userpkglist.txt # Packages installed by User
+
+  # clean up
+  rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt
+
+  else
+    printf '\33[H\33[2J'
+    echo ""
+    echo -e "Something went wrong, redirection does not work !!!"
+    echo ""
+    sleep 3
+    _custom_URL
+
+  fi
+
+}
+###
+# Compare results
+_compare() {
+  _GetPkgsUrl
+  #_GetPkgsUrlRedirection
+
+
+}
+###
+# Check if local release.txt file exists for possible installation and to avoid running a new comparison which would overwrite user changes
+_installcheck () {
+  printf '\33[H\33[2J'
+  echo ""
+  if [[ -f $(readlink -e *release.txt) ]]
+  then
+  file="echo *release.txt"
+  cat ${file} > install.txt
+  echo ""
+  echo -e "\e[7m A existing comparison was found! Please choose what to do! \e[0m"
+  echo ""
+  echo "  1) Install from *release.txt"
+  echo "  2) Install from release-removed-uninstalled.txt"
+  echo "  3) Install from *release.txt after a new Comparison"
+  echo "  4) Install from release-removed-uninstalled.txt after a new Comparison"
+  echo "  0) Quit"
+  read -s -n1 choice
+  case "$choice" in
+        1)
+            sudo pacman -S - < install.txt
+            rm -rf install.txt
+            ;;
+        2)
+            sudo pacman -S - < release-removed-uninstalled.txt
+            rm -rf install.txt
+            ;;
+        3)
+            rm -rf install.txt ${file} userpkglist.txt release-removed-uninstalled.txt
+            _choise
+            echo ""
+            echo -e "\e[7m Starting installation! \e[0m"
+            echo ""
+      	    sudo pacman -S - < *release.txt
+            ;;
+        4)
+            rm -rf install.txt ${file} userpkglist.txt release-removed-uninstalled.txt
+            _choise
+            echo ""
+            echo -e "\e[7m Starting installation! \e[0m"
+            echo ""
+            sudo pacman -S - < release-removed-uninstalled.txt
+            ;;
+        0|q)
+            rm -rf install.txt
+            ;;
+        * ) echo "invalid option $REPLY"
+            ;;
+    esac
+  else
+    echo "  1) Install from *release.txt"
+    echo "  2) Install from release-removed-uninstalled.txt"
+    echo "  0) Quit"
+    read -s -n1 choice
+    case "$choice" in
+          1)
+              _choise
+              echo ""
+              echo -e "\e[7m Starting installation! \e[0m"
+              echo ""
+              sudo pacman -S - < *release.txt
+              ;;
+          2)
+              _choise
+              echo ""
+              echo -e "\e[7m Starting installation! \e[0m"
+              echo ""
+              sudo pacman -S - < release-removed-uninstalled.txt
+              ;;
+          0|q)
+              rm -rf install.txt
+              ;;
+          * ) echo "invalid option $REPLY"
+              ;;
+      esac
+
+fi
+}
+###
+# install different packages Flag
+if [ "$1" == "install" ]; then
+  echo ""
+  echo -e "\e[7m Installation Options \e[0m"
+  _installcheck
+fi
+###
+# Compare from custom *pkgs URL Flag
+if [ "$1" == "url" ]; then
+  _custom_URL
+fi
+###
+# Run the script without flags
+_choise
