@@ -245,7 +245,7 @@ function main {
             ;;
         9)
             echo
-            xdg-open https://wiki.archlinux.org/index.php/Xinput
+            xdg-open https://wiki.archlinux.org/index.php/Touchpad_Synaptics
 						echo
 						echo -e "$RED To return press ENTER $NC"
             read -r
