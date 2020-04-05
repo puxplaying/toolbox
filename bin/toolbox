@@ -149,9 +149,9 @@ function taskmanager {
 function sysinfo {
   if [ -e /usr/bin/inxi ]
   then
-    sudo inxi -v8 | tee $HOME/testfile
-    cat testfile| fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
-    rm -rf $HOME/testfile
+    sudo inxi -v8 | tee $HOME/.inxi.txt
+    cat .inxi.txt | fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
+    rm -rf $HOME/.inxi.txt
 	else
 		echo "$INSTALLINGINXIMSG"
     if [ - e /var/lib/pacman/db.lck ]

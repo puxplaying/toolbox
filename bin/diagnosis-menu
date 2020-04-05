@@ -114,7 +114,9 @@ function system_diagnosis_ui {
               ;;
           6|D|d )
               printf '\33[H\33[2J'
-              pkexec dmesg | less | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              sudo dmesg | less | tee $HOME/.dmesg.txt
+              cat .dmesg.txt | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              rm -rf $HOME/.dmesg.txt
               echo
               echo -e " $RED Displaying Dmesg. To return to System Diagnosis press ENTER $NC"
               # wait for input, e.g. by pressing ENTER:
@@ -132,7 +134,7 @@ function system_diagnosis_ui {
               fi
               fi
               echo
-              echo -e " $RED Displaying Journal Errors. To return to System Diagnosis press ENTER $NC"
+              echo -e " $RED Displaying Graphics Log. To return to System Diagnosis press ENTER $NC"
               # wait for input, e.g. by pressing ENTER:
               read -r
               ;;
