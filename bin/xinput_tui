@@ -245,7 +245,7 @@ function main {
             ;;
         9)
             echo
-            $BROWSER https://wiki.archlinux.org/index.php/Touchpad_Synaptics
+            xdg-open https://wiki.archlinux.org/index.php/Xinput
 						echo
 						echo -e "$RED To return press ENTER $NC"
             read -r
