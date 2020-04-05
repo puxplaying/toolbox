@@ -178,7 +178,7 @@ function main {
 	    echo -e " $TC+----------------------------------------------------------------+$NC"
 	    echo -e "      \e[7mEsc\e[0m Refresh the UI"
 	    echo ""
-	    echo -e "  Enter marked number             -    $BG 0 $NC $E0 "
+	    echo -e "  Enter marked number or letter   -    $BG 0 $NC $E0 "
 
 	    # save entered number/letter in variable "choice"
 	    read -s -n1 choice
