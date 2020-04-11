@@ -2,10 +2,11 @@
 Collection of terminal applications for Manjaro and Arch based Systems (Bash TUI).
 
 How to run:
+- ```sudo pacman -Syu base-devel git```
 - ```git clone https://github.com/puxplaying/toolbox.git```
-- ``` cd toolbox ```
-- ``` makepkg -srci ```
-- ``` toolbox ```
+- ```cd toolbox```
+- ```makepkg -srci```
+- ```toolbox```
 
 ---
 
