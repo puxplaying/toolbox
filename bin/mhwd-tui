@@ -215,7 +215,18 @@ do
             ;;
         P|p)
             printf '\33[H\33[2J'
+            if [[ -f /usr/bin/powertop ]]
+            then
             sudo powertop
+            else
+            echo "Installing Powertop"
+            if [[ -f /var/lib/pacman/db.lck ]]
+            then
+            echo "powertop is not installed and Pacman seems to be in use"
+            else
+            sudo pacman -Sy powertop && sudo powertop
+            fi
+            fi
             echo
             echo -e " $RED To return to Hardware and Drivers press ENTER $NC"
             # wait for input, e.g. by pressing ENTER:

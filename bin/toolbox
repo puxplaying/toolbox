@@ -73,6 +73,8 @@ function hardware_settings {
 function cli_filemanager {
 	if [ -e /usr/bin/ranger ]
   then
+    echo -e " $RED Press $BG Q $NC$RED to return to ToolBox $NC"
+    sleep 2
 		ranger
 	elif [ -e /usr/bin/mc ]
   then
@@ -266,8 +268,6 @@ do
             ;;
         4|F|f )
             printf '\33[H\33[2J'
-            echo -e " $RED Press $BG Q $NC$RED to return to ToolBox $NC"
-            sleep 2
             cli_filemanager
             ;;
         5|W|w )
