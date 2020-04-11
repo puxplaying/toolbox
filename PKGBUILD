@@ -15,8 +15,8 @@ source=("$url/archive/$pkgver.tar.gz")
 md5sums=('SKIP')
 
 package () {
-	cd "$srcdir"
+	cd "$srcdir/$pkgname-$pkgver"
 	install -dm755 $pkgdir/usr/bin
-	cp -r $srcdir/$pkgname/bin $pkgdir/usr
+	cp -r $srcdir/$pkgname-$pkgver/bin $pkgdir/usr
 	chmod a+x $pkgdir/usr/bin/*
 }
