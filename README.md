@@ -1,5 +1,6 @@
 # ToolBox
 Collection of terminal applications for Manjaro and Arch based Systems (Bash TUI).
+- https://forum.manjaro.org/t/manjaro-cli-menu/129017
 
 How to run:
 - ```sudo pacman -Syu base-devel git```
