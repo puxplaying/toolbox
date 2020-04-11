@@ -1,0 +1,186 @@
+#!/bin/bash
+
+# =======================
+# Define Colors
+RED='\e[41m'
+BLUE='\e[44m'
+ORANGE='\e[46m'
+NC='\e[0m' # No color
+BG='\e[7m' # Highlighting Background color
+TC='\e[1m' # Highlighting Text color
+
+# System Diagnosis Menu
+function system_diagnosis_ui {
+  # Define Menu entries which will be run with the echo command
+  E0="\e[1mQ\e[0muit"
+  E1="\e[1mP\e[0macman Log Search"
+  E2="\e[1mI\e[0mnstalled Packages"
+  E3="\e[1mZ\e[0msh History Search"
+  E4="\e[1mB\e[0mash History Search"
+  E5="\e[1mJ\e[0mournal Error Search"
+  E6="\e[1mD\e[0mmesg Search"
+  E7="\e[1mG\e[0mraphics Log Search"
+  E8="Man Page \e[1mS\e[0mearch"
+  E9="Journal \e[1mL\e[0mive Log"
+  E10="Enter The \e[1mM\e[0matrix"
+
+  # Service messages section
+  # Wrong Option
+  ERRORMSG="$RED Wrong option $NC"
+  TRYAGAINMSG=" Please try again..."
+
+  # Run infinite loop for UI / menu, till the user quits using the "quit" option or CTRL+C.
+  while true
+  do
+
+      printf '\33[H\33[2J' # Use this instead of the clear command
+
+      echo
+      echo -e "                          $BG$TC System Diagnosis $NC"
+      echo -e " $TC+----------------------------------------------------------------+$NC"
+      echo -e " $TC|$NC    $BG 1 $NC $E1       $TC|$NC    $BG 2 $NC $E2     $TC|$NC"
+      echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+      echo -e " $TC|$NC    $BG 3 $NC $E3      $TC|$NC    $BG 4 $NC $E4    $TC|$NC"
+      echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+      echo -e " $TC|$NC    $BG 5 $NC $E5    $TC|$NC    $BG 6 $NC $E6           $TC|$NC"
+      echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+      echo -e " $TC|$NC    $BG 7 $NC $E7 $NC    $TC|$NC    $BG 8 $NC $E8        $TC|$NC"
+      echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+      echo -e " $TC|$NC    $BG 9 $NC $E9 $NC       $TC|$NC    $BG M $NC $E10       $TC|$NC"
+      echo -e " $TC+----------------------------------------------------------------+$NC"
+      echo -e "      \e[7mEsc\e[0m Refresh the UI"
+      echo ""
+      echo -e "  Enter marked number or letter   -    $BG 0 $NC $E0 "
+
+      # save entered number/letter in variable "choice"
+      read -s -n1 choice
+      # convert "choice" variable to lowercase:
+      choice="$(echo "$choice" | tr '[:upper:]' '[:lower:]' )"
+      echo
+
+
+      # test, whether "choice" fits any of the following numbers or letters
+      case "$choice" in
+
+          1|p|P )
+              printf '\33[H\33[2J'
+              cat /var/log/pacman.log | fzf -e +s --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              echo
+              echo -e " $RED Displaying Pacman Log. To return to System Diagnosis press ENTER $NC"
+              # wait for input, e.g. by pressing ENTER:
+              read -r
+              ;;
+          2|i|I )
+              printf '\33[H\33[2J'
+              pacman -Qq | fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --preview ' pacman -Qi {} ' --no-unicode "$( if (( $(tput cols) >= 125 )); then echo "--preview-window=right:55%:wrap"; else echo "--preview-window=bottom:60%:wrap"; fi )"
+              echo
+              echo -e " $RED Displaying Installed Packages. To return to System Diagnosis press ENTER $NC"
+              # wait for input, e.g. by pressing ENTER:
+              read -r
+              ;;
+          3|Z|z )
+              printf '\33[H\33[2J'
+              if [[ -f $HOME/.zhistory ]]
+              then
+              cat $HOME/.zhistory | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              else
+              echo ".zhistory not found"
+              fi
+              echo
+              echo -e " $RED Displaying Zsh History. To return to System Diagnosis press ENTER $NC"
+              # wait for input, e.g. by pressing ENTER:
+              read -r
+              ;;
+          4|F|f )
+              printf '\33[H\33[2J'
+              if [[ -f $HOME/.bash_history ]]
+              then
+              cat $HOME/.bash_history | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              else
+              echo ".bash_history not found"
+              fi
+              echo
+              echo -e " $RED Displaying Bash History. To return to System Diagnosis press ENTER $NC"
+              # wait for input, e.g. by pressing ENTER:
+              read -r
+          ;;
+          5|J|j )
+              printf '\33[H\33[2J'
+              journalctl -p 3 -xb | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              echo
+              echo -e " $RED Displaying Journal Errors. To return to System Diagnosis press ENTER $NC"
+              # wait for input, e.g. by pressing ENTER:
+              read -r
+              ;;
+          6|D|d )
+              printf '\33[H\33[2J'
+              sudo dmesg | less | tee $HOME/.dmesg.txt
+              cat .dmesg.txt | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              rm -rf $HOME/.dmesg.txt
+              echo
+              echo -e " $RED Displaying Dmesg. To return to System Diagnosis press ENTER $NC"
+              # wait for input, e.g. by pressing ENTER:
+              read -r
+              ;;
+          7|G|g )
+              printf '\33[H\33[2J'
+              if [[ -f /var/log/Xorg.0.log ]]
+              then
+              cat /var/log/Xorg.0.log | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              else
+              if [[ -f $HOME/.local/share/xorg/Xorg.0.log ]]
+              then
+              cat $HOME/.local/share/xorg/Xorg.0.log | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              fi
+              fi
+              echo
+              echo -e " $RED Displaying Graphics Log. To return to System Diagnosis press ENTER $NC"
+              # wait for input, e.g. by pressing ENTER:
+              read -r
+              ;;
+          8|S|s )
+              printf '\33[H\33[2J'
+              pacman -Qq | fzf -i --reverse --info=inline --prompt="Enter string > " --header="Press Shift + Up & Down Keys to scroll. ESC to quit. " --preview ' man {} ' --no-unicode "$( if (( $(tput cols) >= 125 )); then echo "--preview-window=right:55%:wrap"; else echo "--preview-window=bottom:60%:wrap"; fi )"
+              ;;
+          9|L|l )
+              printf '\33[H\33[2J'
+              journalctl --follow --full | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              echo
+              echo -e " $RED Displaying Live Journal. To return to System Diagnosis press ENTER $NC"
+              # wait for input, e.g. by pressing ENTER:
+              read -r
+              ;;
+          M|m )
+              printf '\33[H\33[2J'
+              if [[ -f /usr/bin/cmatrix ]]
+              then
+              echo -e " $RED Press $BG Q $NC$RED to return to ToolBox $NC"
+              sleep 2
+              cmatrix
+              else
+              echo "Installing Cmatrix"
+              if [[ -f /var/lib/pacman/db.lck ]]
+              then
+              echo "cmatrix is not installed and Pacman seems to be in use"
+              else
+              sudo pacman -Sy cmatrix && cmatrix
+              fi
+              fi
+              ;;
+          0|Q|q )
+              printf '\33[H\33[2J' && exit
+              ;;
+          $'\e'|$'\e'$'\e' ) # Pressing ESC will re-arrange the UI if the terminal has been resized
+              ;;
+          * ) # do this, if $choice variable contains anything else not offered above
+              echo -e "$ERRORMSG"
+              echo -e "$TRYAGAINMSG"
+              sleep 2
+              ;;
+
+      esac # close case-loop
+
+
+  done # close while-loop
+}
+system_diagnosis_ui

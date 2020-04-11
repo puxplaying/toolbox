@@ -1,0 +1,189 @@
+#!/bin/bash
+
+# =======================
+# Define Colors
+RED='\e[41m'
+BLUE='\e[44m'
+ORANGE='\e[46m'
+NC='\e[0m' # No color
+BG='\e[7m' # Highlighting Background color
+TC='\e[1m' # Highlighting Text color
+
+# Service messages section
+# Wrong Option
+ERRORMSG="$RED Wrong option $NC"
+TRYAGAINMSG=" Please try again..."
+PS3SYSSETTMSG="Select bootloader to configure: "
+CONTINMSG="$RED To return press ENTER $NC"
+USINGNANOFOREDITMSG="Using nano for edit..."
+
+function pressanykeyrequest {
+	echo -e "$CONTINMSG"
+	read -r
+	STATUSVAR=1
+}
+
+function bootloader_configuration {
+PS3="$PS3SYSSETTMSG"
+# Gather the results in an array.
+dms=("grub" "refind" "systemdboot" "syslinux" "cancel")
+
+select pick in "${dms[@]}"
+do
+	case $pick in
+		grub)
+			sudo $TEXTEDITOR /etc/default/grub
+			sudo update-grub
+			break
+			;;
+		refind)
+			sudo $TEXTEDITOR /boot/refind_linux.conf
+			sudo $TEXTEDITOR /boot/EFI/refind/refind.conf
+			break
+			;;
+		systemdboot)
+			sudo $TEXTEDITOR /boot/loader/entries/manjaro.conf
+			break
+			;;
+		syslinux)
+			sudo $TEXTEDITOR /boot/syslinux/syslinux.cfg
+			break
+			;;
+		cancel)
+			break
+	esac
+done
+}
+
+function tryvisudo {
+	visudoerrormsggrep=""
+	visudoerrormsggrep=$(sudo visudo 2>&1 | grep "no editor found")
+	if [ "$visudoerrormsggrep" != "" ]; then
+		echo "$USINGNANOFOREDITMSG"
+		sudo EDITOR=nano visudo
+		return 0
+	else
+		pressanykeyrequest
+	fi
+	return 1
+}
+
+function main {
+
+	# Define Menu entries which will be run with the echo command
+	E0="\e[1mQ\e[0muit"
+	E1="Pacman settings"
+	E2="Mkinitcpio"
+	E3="Fstab"
+	E4="Sudoers"
+	E5="Logind"
+	E6="Bootloader"
+	E7="Udevil settings"
+	E8="Xinitrc"
+	E9="Setup"
+
+    while true; do
+			printf '\33[H\33[2J' # Use this instead of the clear command
+
+			echo
+			echo -e "                           $BG$TC Configuration $NC"
+			echo -e " $TC+----------------------------------------------------------------+$NC"
+			echo -e " $TC|$NC    $BG 1 $NC $E1         $TC|$NC    $BG 2 $NC $E2             $TC|$NC"
+			echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+			echo -e " $TC|$NC    $BG 3 $NC $E3                   $TC|$NC    $BG 4 $NC $E4                $TC|$NC"
+			echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+			echo -e " $TC|$NC    $BG 5 $NC $E5                  $TC|$NC    $BG 6 $NC $E6      	  $TC|$NC"
+			echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+			echo -e " $TC|$NC    $BG 7 $NC $E7 $NC        $TC|$NC    $BG 8 $NC $E8        	  $TC|$NC"
+			echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+			echo -e " $TC|$NC    $BG 9 $NC $E9         	  $TC|$NC    $BG$TC T $NC$BG$TC O $NC$BG$TC O $NC$BG$TC L $NC $BG B $NC $BG O $NC $BG X $NC   $TC|$NC"
+			echo -e " $TC+----------------------------------------------------------------+$NC"
+			echo -e "      \e[7mEsc\e[0m Refresh the UI"
+			echo ""
+			echo -e "  Enter marked number or letter   -    $BG 0 $NC $E0 "
+
+			# save entered number/letter in variable "choice"
+			read -s -n1 choice
+			# convert "choice" variable to lowercase:
+			choice="$(echo "$choice" | tr '[:upper:]' '[:lower:]' )"
+			echo
+
+
+			# test, whether "choice" fits any of the following numbers or letters
+			case "$choice" in
+        1)
+            echo
+            sudo $TEXTEDITOR /etc/pacman.conf
+            echo ""
+            ;;
+        2)
+            echo
+            sudo $TEXTEDITOR /etc/mkinitcpio.conf
+            echo ""
+            ;;
+        3)
+            echo
+            sudo $TEXTEDITOR /etc/fstab
+            echo ""
+            ;;
+        4)
+            echo
+            sudo echo ""
+            STATUSVAR=$?
+            if [ $STATUSVAR -eq 1 ]; then
+             echo ""
+            else
+            	sudo visudo
+            	STATUSVAR=$?
+            	if [ $STATUSVAR -eq 1 ]; then
+            		tryvisudo
+            		STATUSVAR=$?
+            			if [ $STATUSVAR -eq 0 ]; then
+            				pressanykeyrequest
+            			fi
+            	else
+            		pressanykeyrequest
+            	fi
+            fi
+            echo ""
+            ;;
+        5)
+            echo
+            sudo $TEXTEDITOR /etc/systemd/logind.conf
+            echo ""
+            ;;
+        6)
+            echo
+            bootloader_configuration
+            echo ""
+            ;;
+        7)
+            echo
+            sudo $TEXTEDITOR /etc/udevil/udevil.conf
+            echo ""
+            ;;
+        8)
+            echo
+            $TEXTEDITOR ~/.xinitrc
+            echo ""
+            ;;
+        9)
+            echo
+            system-setup
+            echo ""
+            ;;
+			  0|Q|q)
+		        printf '\33[H\33[2J' && exit
+		        ;;
+	  		$'\e'|$'\e'$'\e' ) # Pressing ESC will re-arrange the UI if the terminal has been resized
+		        ;;
+        *)
+ 			      echo -e "$ERRORMSG"
+					 	echo -e "$TRYAGAINMSG"
+			    	sleep 2
+			    	;;
+    esac
+    done
+}
+
+main

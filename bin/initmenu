@@ -1,0 +1,293 @@
+#!/bin/bash
+
+# =======================
+# Define Colors
+RED='\e[41m'
+BLUE='\e[44m'
+ORANGE='\e[46m'
+NC='\e[0m' # No color
+BG='\e[7m' # Highlighting Background color
+TC='\e[1m' # Highlighting Text color
+
+# Service messages section
+# Wrong Option
+ERRORMSG="$RED Wrong option $NC"
+TRYAGAINMSG=" Please try again..."
+#
+CONTINMSG=" $RED To return to Init Menu press ENTER $NC"
+SELECTFILEMSG="Select file to configure and press Enter: "
+SELECTTARGETMSG="Select target and press Enter to change to: "
+SERVICEPREFIXMSG="Service "
+SERVICESTARTEDMSG=" was started successfully"
+SERVICEENABLEDMSG=" was enabled successfully"
+SERVICESTOPPEDMSG=" was stopped successfully"
+SERVICEDISABLEDMSG=" was disabled successfully"
+
+function pressanykeyrequest {
+	echo -e "$CONTINMSG"
+	read -r
+	STATUSVAR=1
+}
+
+function config_editor {
+PS3="$SELECTFILEMSG"
+configs=("journald.conf" "system.conf" "logind.conf" "user.conf" "cancel")
+
+select pick in "${configs[@]}"
+do
+	case $pick in
+		logind.conf)
+			[ -e /etc/systemd/logind.conf.d/10-logind.conf ] || \
+			sudo mkdir -p /etc/systemd/logind.conf.d/ && \
+			sudo cp /etc/systemd/logind.conf /etc/systemd/logind.conf.d/10-logind.conf && \
+			sudo $TEXTEDITOR /etc/systemd/logind.conf.d/10-logind.conf
+			break
+			;;
+		system.conf)
+			[ -e /etc/systemd/system.conf.d/10-system.conf ] || \
+			sudo mkdir -p /etc/systemd/system.conf.d/ && \
+			sudo cp /etc/systemd/system.conf /etc/systemd/system.conf.d/10-system.conf && \
+			sudo $TEXTEDITOR /etc/systemd/system.conf.d/10-system.conf
+			break
+			;;
+		journald.conf)
+			[ -e /etc/systemd/journald.conf.d/10-journald.conf ] || \
+			sudo mkdir -p /etc/systemd/journald.conf.d/ && \
+			sudo cp /etc/systemd/journald.conf /etc/systemd/journald.conf.d/10-journald.conf && \
+			sudo $TEXTEDITOR /etc/systemd/journald.conf.d/10-journald.conf
+			break
+			;;
+		user.conf)
+			[ -e /etc/systemd/user.conf.d/10-user.conf ] || \
+			sudo mkdir -p /etc/systemd/user.conf.d/ && \
+			sudo cp /etc/systemd/user.conf /etc/systemd/user.conf.d/10-user.conf && \
+			sudo $TEXTEDITOR /etc/systemd/user.conf.d/10-user.conf
+			break
+			;;
+		cancel)
+			break
+	esac
+done
+
+}
+
+function change_runlevel {
+PS3="$SELECTTARGETMSG"
+targets=("poweroff" "rescue" "multi-user" "graphical" "reboot" "cancel")
+
+select pick in "${targets[@]}"
+do
+	case $pick in
+		poweroff)
+			sudo systemctl isolate poweroff.target
+			break
+			;;
+		reboot)
+			sudo systemctl isolate reboot.target
+			break
+			;;
+		rescue)
+			sudo systemctl isolate rescue.target
+			break
+			;;
+		multi-user)
+			sudo systemctl isolate multi-user.target
+			break
+			;;
+		graphical)
+			sudo systemctl isolate graphical.target
+			break
+			;;
+		cancel)
+			break
+	esac
+done
+
+
+}
+
+function enable_services {
+	OUTPUTITEM=""
+	OUTPUTITEM=$(systemctl list-unit-files | awk '/disabled/ {print $1}' | fzf -m -e --reverse)
+	if [ "$OUTPUTITEM" != "" ]
+	then
+		sudo systemctl enable $OUTPUTITEM
+		STATUSVAR=$?
+	else
+		STATUSVAR=1
+	fi
+return $STATUSVAR
+}
+
+function start_services {
+	OUTPUTITEM=""
+	OUTPUTITEM=$(systemctl list-unit-files | awk '/disabled/ {print $1}' | fzf -m -e --reverse)
+	if [ "$OUTPUTITEM" != "" ]
+	then
+		sudo systemctl start $OUTPUTITEM
+		STATUSVAR=$?
+	else
+		STATUSVAR=1
+	fi
+return $STATUSVAR
+}
+
+function stop_services {
+	OUTPUTITEM=""
+	OUTPUTITEM=$(systemctl list-unit-files | awk '/enabled/ {print $1}' | fzf -m -e --reverse)
+	if [ "$OUTPUTITEM" != "" ]
+	then
+		sudo systemctl stop $OUTPUTITEM
+		STATUSVAR=$?
+	else
+		STATUSVAR=1
+	fi
+return $STATUSVAR
+}
+
+function disable_services {
+	OUTPUTITEM=""
+	OUTPUTITEM=$(systemctl list-unit-files | awk '/enabled/ {print $1}' | fzf -m -e --reverse)
+	if [ "$OUTPUTITEM" != "" ]
+	then
+		sudo systemctl disable $OUTPUTITEM
+		STATUSVAR=$?
+	else
+		STATUSVAR=1
+	fi
+return $STATUSVAR
+}
+
+function main {
+
+	# Define Menu entries which will be run with the echo command
+	E0="\e[1mQ\e[0muit"
+	E1="Enable Services"
+	E2="Disable Services"
+	E3="Start Services"
+	E4="Stop Services"
+	E5="List Active Services"
+	E6="Show Boot Messages"
+	E7="Edit Config Files"
+	E8="Change Runlevel"
+	E9="Analyze Boot"
+
+    while true; do
+
+    printf '\33[H\33[2J' # Use this instead of the clear command
+
+		echo
+    echo -e "                            $BG$TC Init-System $NC"
+    echo -e " $TC+----------------------------------------------------------------+$NC"
+    echo -e " $TC|$NC    $BG 1 $NC $E1         $TC|$NC    $BG 2 $NC $E2       $TC|$NC"
+    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+    echo -e " $TC|$NC    $BG 3 $NC $E3          $TC|$NC    $BG 4 $NC $E4          $TC|$NC"
+    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+    echo -e " $TC|$NC    $BG 5 $NC $E5    $TC|$NC    $BG 6 $NC $E6     $TC|$NC"
+    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+    echo -e " $TC|$NC    $BG 7 $NC $E7 $NC      $TC|$NC    $BG 8 $NC $E8        $TC|$NC"
+    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+    echo -e " $TC|$NC    $BG 9 $NC $E9 	          $TC|$NC    $BG$TC T $NC$BG$TC O $NC$BG$TC O $NC$BG$TC L $NC $BG B $NC $BG O $NC $BG X $NC $E12  $TC|$NC"
+    echo -e " $TC+----------------------------------------------------------------+$NC"
+    echo -e "      \e[7mEsc\e[0m Refresh the UI"
+    echo ""
+    echo -e "  Enter marked number             -    $BG 0 $NC $E0 "
+
+    # save entered number/letter in variable "choice"
+    read -s -n1 choice
+    # convert "choice" variable to lowercase:
+    choice="$(echo "$choice" | tr '[:upper:]' '[:lower:]' )"
+    echo
+
+
+    # test, whether "choice" fits any of the following numbers or letters
+    case "$choice" in
+
+        1)
+            echo
+            enable_services
+            STATUSVAR=$?
+	    	if [ $STATUSVAR -eq 0 ]; then
+		    	echo -e "$SERVICEPREFIXMSG$OUTPUTITEM$SERVICEENABLEDMSG"
+		    	pressanykeyrequest
+	    	else
+		    	echo ""
+	    	fi
+            ;;
+        2)
+            echo
+            disable_services
+            STATUSVAR=$?
+	    	if [ $STATUSVAR -eq 0 ]; then
+		    	echo -e "$SERVICEPREFIXMSG$OUTPUTITEM$SERVICEDISABLEDMSG"
+		    	pressanykeyrequest
+	    	else
+		    	echo ""
+	    	fi
+            ;;
+        3)
+            echo
+            start_services
+            STATUSVAR=$?
+	    	if [ $STATUSVAR -eq 0 ]; then
+		    	echo -e "$SERVICEPREFIXMSG$OUTPUTITEM$SERVICESTARTEDMSG"
+		    	pressanykeyrequest
+	    	else
+		    	echo""
+	    	fi
+            ;;
+        4)
+            echo
+            stop_services
+            STATUSVAR=$?
+	    	if [ $STATUSVAR -eq 0 ]; then
+		    	echo -e "$SERVICEPREFIXMSG$OUTPUTITEM$SERVICESTOPPEDMSG"
+		    	pressanykeyrequest
+	    	else
+		    	echo ""
+	    	fi
+	    	;;
+        5)
+            echo
+            systemctl
+            echo ""
+            pressanykeyrequest
+            ;;
+        6)
+            echo
+            dmesg
+            echo ""
+            pressanykeyrequest
+            ;;
+        7)
+            echo
+            config_editor
+            echo ""
+            ;;
+        8)
+            echo
+            change_runlevel
+            echo ""
+            ;;
+        9)
+            echo
+	    	clear
+            systemd-analyze blame
+            echo ""
+            pressanykeyrequest
+            ;;
+				0|Q|q )
+		        printf '\33[H\33[2J' && exit
+		        ;;
+		    $'\e'|$'\e'$'\e' ) # Pressing ESC will re-arrange the UI if the terminal has been resized
+		        ;;
+		    * ) # do this, if $choice variable contains anything else not offered above
+		        echo -e "$ERRORMSG"
+		        echo -e "$TRYAGAINMSG"
+		        sleep 2
+		        ;;
+    esac
+    done
+}
+
+main

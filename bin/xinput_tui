@@ -1,0 +1,274 @@
+#!/bin/bash
+## xinput_tui
+
+# =======================
+# Define Colors
+RED='\e[41m'
+BLUE='\e[44m'
+ORANGE='\e[46m'
+NC='\e[0m' # No color
+BG='\e[7m' # Highlighting Background color
+TC='\e[1m' # Highlighting Text color
+
+# Service messages section
+# Wrong Option
+ERRORMSG="$RED Wrong option $NC"
+TRYAGAINMSG=" Please try again..."
+
+
+touchpad_id=$(xinput --list | grep -i "Touchpad" | xargs -n 1 | grep "id=" | sed 's/id=//g')
+
+toggle_natural_scrolling()
+{
+natural_scrolling_code=$(xinput --list-props "$touchpad_id" | grep "Natural Scrolling" | awk '{print $5}' |  grep -o '[0-9]\+')
+
+if [[ $(xinput --list-props "$touchpad_id" | grep "Natural Scrolling Enabled (" | awk '{print $6}' | head -n1) == 1 ]]; then
+	xinput --set-prop "$touchpad_id" "$natural_scrolling_code" 0 && echo "Natural scrolling is now disabled" || echo "Something vent wrong"
+else
+	xinput --set-prop "$touchpad_id" "$natural_scrolling_code" 1 && echo "Natural scrolling is now enabled" || echo "Something vent wrong"
+fi
+
+}
+
+toggle_tap_to_click()
+{
+tap_to_click_code=$(xinput --list-props "$touchpad_id" | awk '/Tapping Enabled \(/ {print $4}' | grep -o '[0-9]\+')
+
+if [[ $(xinput --list-props "$touchpad_id" | awk '/Tapping Enabled \(/ {print $5}') == 1 ]]; then
+	xinput --set-prop "$touchpad_id" "$tap_to_click_code" 0 && echo "Tap to click is now disabled" || echo "Something vent wrong"
+else
+	xinput --set-prop "$touchpad_id" "$tap_to_click_code" 1 && echo "Tap to click is now enabled" || echo "Something vent wrong"
+fi
+
+}
+
+toggle_left_handed()
+{
+left_handed_code=$(xinput --list-props "$touchpad_id" | grep "Left Handed Enabled" | awk '{print $5}' |  grep -o '[0-9]\+')
+
+if [[ $(xinput --list-props "$touchpad_id" | grep "Left Handed Enabled" | awk '{print $6}' | head -n1) == 1 ]]; then
+	xinput --set-prop "$touchpad_id" "$left_handed_code" 0 && echo "Left handed mode is now disabled" || echo "Something vent wrong"
+else
+	xinput --set-prop "$touchpad_id" "$left_handed_code" 1 && echo "Left handed mode is now enabled" || echo "Something vent wrong"
+fi
+
+}
+
+set_pointer_speed()
+{
+
+accel_speed_code=$(xinput --list-props "$touchpad_id" | awk '/Accel Speed \(/ {print $4}' | grep -o '[0-9]\+')
+current_speed=$(xinput --list-props "$touchpad_id" | awk '/Accel Speed \(/ {print $5}')
+
+	echo ""
+	echo "Setting pointer speed."
+	echo "Current speed is $current_speed"
+	echo "input number between -1 and 1 and press enter"
+	read speed
+	xinput --set-prop "$touchpad_id" "$accel_speed_code" "$speed"
+	echo "Speed is now set to $speed."
+	read -r -p "${1:-Do you wish to make this setting permanent? [Y/n]} " response
+    case $response in
+        [nN] | [nN][oO])
+            false
+            ;;
+        *)
+            sudo bash -c 'echo -e "Section \"InputClass\"
+	\tIdentifier \"'"$touchpad_id"'\"
+	\tDriver \"libinput\"
+	\tMatchIsTouchpad \"on\"
+	\tOption \"AccelSpeed\" \"'$speed'\"
+EndSection" > /etc/X11/xorg.conf.d/31-pointerspeed.conf'
+            ;;
+    esac
+    echo ""
+    echo "created file /etc/X11/xorg.conf.d/31-pointerspeed.conf.
+    Press any key to continue"
+    read -s -n1
+}
+
+toggle_drag_lock()
+{
+drag_lock_code=$(xinput --list-props "$touchpad_id" | grep "Drag Lock Enabled (" | awk '{print $6}' |  grep -o '[0-9]\+')
+
+if [[ $(xinput --list-props "$touchpad_id" | grep "Drag Lock Enabled (" | awk '{print $7}' | head -n1) == 1 ]]; then
+	xinput --set-prop "$touchpad_id" "$drag_lock_code" 0 && echo "Drag lock is now disabled" || echo "Something vent wrong"
+else
+	xinput --set-prop "$touchpad_id" "$drag_lock_code" 1 && echo "Drag lock is now enabled" || echo "Something vent wrong"
+fi
+
+}
+
+toggle_disable_while_typing()
+{
+disable_while_typing_code=$(xinput --list-props "$touchpad_id" | grep "Disable While Typing Enabled (" | awk '{print $6}' |  grep -o '[0-9]\+')
+
+if [[ $(xinput --list-props "$touchpad_id" | grep "Disable While Typing Enabled (" | awk '{print $7}' | head -n1) == 1 ]]; then
+	xinput --set-prop "$touchpad_id" "$disable_while_typing_code" 1 && echo "Touchpad is now disabled while typing" || echo "Something vent wrong"
+else
+	xinput --set-prop "$touchpad_id" "$disable_while_typing_code" 0 && echo "Touchpad is now enabled while typing" || echo "Something vent wrong"
+fi
+
+}
+
+toggle_horizontal_scrolling()
+{
+horizontal_scrolling_code=$(xinput --list-props "$touchpad_id" | grep "Horizontal Scroll Enabled" | awk '{print $5}' |  grep -o '[0-9]\+')
+
+if [[ $(xinput --list-props "$touchpad_id" | grep "Horizontal Scroll Enabled" | awk '{print $6}' | head -n1) == 1 ]]; then
+	xinput --set-prop "$touchpad_id" "$horizontal_scrolling_code" 0 && echo "Horizontal scrolling is now disabled" || echo "Something vent wrong"
+else
+	xinput --set-prop "$touchpad_id" "$horizontal_scrolling_code" 1 && echo "Horizontal scrolling is now enabled" || echo "Something vent wrong"
+fi
+
+}
+
+function gui {
+	if [ -e /usr/bin/lxinput ]; then
+		lxinput
+	else
+		read -p "Lxinput is not installed. Should it be installed? (y/N)" -n 1 -r
+		echo
+		if [[ $REPLY =~ ^[Yy]$ ]]
+		then
+			if [ -e /var/lib/pacman/db.lck ]; then
+				echo "Pacman seems to be currently in use."
+			else
+				sudo pacman -Sy lxinput && lxinput &>/dev/null
+			fi
+		fi
+	fi
+}
+
+function main {
+
+	# Define Menu entries which will be run with the echo command
+	E0="\e[1mQ\e[0muit"
+	E1="Set Pointer Speed"
+	E2="Toggle Tap to Click"
+	E3="Toggle Drag Lock"
+	E4="Toggle Left Handed Mode"
+	E5="Toggle Disable While Typing"
+	E6="Toggle Natural Scrolling"
+	E7="Toggle Horizontal Scrolling"
+	E8="Show Xinput Manual"
+	E9="Show Xinput Wiki Entry"
+	E10="Run \e[1mL\e[0mxinput" # (L)
+
+    while true; do
+
+			printf '\33[H\33[2J' # Use this instead of the clear command
+
+	    echo
+	    echo -e "                         $BG$TC Touchpad Settings $NC"
+	    echo -e " $TC+----------------------------------------------------------------+$NC"
+	    echo -e " $TC|$NC    $BG 1 $NC $E1       $TC|$NC    $BG 2 $NC $E2    $TC|$NC"
+	    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+	    echo -e " $TC|$NC    $BG 3 $NC $E3        $TC|$NC    $BG 4 $NC $E4$TC|$NC"
+	    echo -e " $TC|$NC----------------------------------------------------------------$TC|$NC"
+	    echo -e " $TC|$NC    $BG 5 $NC $E5             		  $TC|$NC"
+			echo -e " $TC|$NC                                    				  $TC|$NC"
+			echo -e " $TC|$NC    $BG 6 $NC $E6            			  $TC|$NC"
+			echo -e " $TC|$NC                                    				  $TC|$NC"
+	    echo -e " $TC|$NC    $BG 7 $NC $E7 $NC              		  $TC|$NC"
+			echo -e " $TC|$NC----------------------------------------------------------------$TC|$NC"
+			echo -e " $TC|$NC    $BG 8 $NC $E8      $TC|$NC    $BG 9 $NC $E9 $TC|$NC"
+	    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+	    echo -e " $TC|$NC    $BG L $NC $E10  	  	  $TC|$NC    $BG$TC T $NC$BG$TC O $NC$BG$TC O $NC$BG$TC L $NC $BG B $NC $BG O $NC $BG X $NC $E12  $TC|$NC"
+	    echo -e " $TC+----------------------------------------------------------------+$NC"
+	    echo -e "      \e[7mEsc\e[0m Refresh the UI"
+	    echo ""
+	    echo -e "  Enter marked number or letter   -    $BG 0 $NC $E0 "
+
+	    # save entered number/letter in variable "choice"
+	    read -s -n1 choice
+	    # convert "choice" variable to lowercase:
+	    choice="$(echo "$choice" | tr '[:upper:]' '[:lower:]' )"
+	    echo
+
+
+	    # test, whether "choice" fits any of the following numbers or letters
+	    case "$choice" in
+
+        1)
+            echo
+            set_pointer_speed
+            ;;
+        2)
+            echo
+            toggle_tap_to_click
+						echo
+						echo -e "$RED To return press ENTER $NC"
+            read -r
+            ;;
+        3)
+            echo
+            toggle_drag_lock
+						echo
+						echo -e "$RED To return press ENTER $NC"
+            read -r
+            ;;
+        4)
+            echo
+            toggle_left_handed
+						echo
+						echo -e "$RED To return press ENTER $NC"
+            read -r
+	   		;;
+	   	5)
+            echo
+            toggle_disable_while_typing
+						echo
+						echo -e "$RED To return press ENTER $NC"
+            read -r
+            ;;
+        6)
+            echo
+            toggle_natural_scrolling
+						echo
+						echo -e "$RED To return press ENTER $NC"
+            read -r
+            ;;
+        7)
+            echo
+            toggle_horizontal_scrolling
+						echo
+						echo -e "$RED To return press ENTER $NC"
+            read -r
+            ;;
+        8)
+            echo
+            man xinput
+						echo
+						echo -e "$RED To return press ENTER $NC"
+            read -r
+            ;;
+        9)
+            echo
+            xdg-open https://wiki.archlinux.org/index.php/Touchpad_Synaptics
+						echo
+						echo -e "$RED To return press ENTER $NC"
+            read -r
+            ;;
+        l|L)
+            echo
+            gui
+						echo
+						echo -e "$RED To return press ENTER $NC"
+            read -r
+            ;;
+				0|Q|q )
+		        printf '\33[H\33[2J' && exit
+		        ;;
+		    $'\e'|$'\e'$'\e' ) # Pressing ESC will re-arrange the UI if the terminal has been resized
+		        ;;
+		    * ) # do this, if $choice variable contains anything else not offered above
+		        echo -e "$ERRORMSG"
+		        echo -e "$TRYAGAINMSG"
+		        sleep 2
+		        ;;
+    esac
+    done
+}
+
+main
