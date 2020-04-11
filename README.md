@@ -6,6 +6,7 @@ How to run:
 - ```git clone https://github.com/puxplaying/toolbox.git```
 - ``` cd toolbox ```
 - ``` makepkg -srci ```
+- ``` toolbox ```
 
 ---
 
