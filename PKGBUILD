@@ -1,13 +1,13 @@
 # Maintainer: puxplaying
 
 pkgname=toolbox
-pkgver=0.2
+pkgver=0.3
 pkgrel=1
 pkgdesc="Bash script providing a collection of terminal applications in a simple UI"
 arch=(any)
 url="https://github.com/puxplaying/$pkgname"
 license=('GPL3')
-depends=('pacui' 'pacman-contrib' 'expac' 'sudo' 'fzf' 'meld' 'ncdu' 'gawk' 'bash' 'pacui' 'links' 'sed' 'xorg-xinput' 'inxi' 'cpupower' 'ranger' 'curl' 'powertop')
+depends=('pacui' 'pacman-contrib' 'expac' 'sudo' 'fzf' 'meld' 'ncdu' 'gawk' 'bash' 'pacui' 'links' 'sed' 'xorg-xinput' 'inxi' 'cpupower' 'ranger' 'curl' 'powertop' 'cmus')
 makedepends=('git')
 conflicts=("bmenu" "mhwd-tui")
 optdepends=('cmatrix: Needed for ToolBox')
