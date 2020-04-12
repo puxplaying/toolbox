@@ -3,7 +3,7 @@
 pkgname=toolbox
 pkgver=0.3
 pkgrel=1
-pkgdesc="Bash script providing a collection of terminal applications in a simple UI"
+pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=(any)
 url="https://github.com/puxplaying/$pkgname"
 license=('GPL3')
