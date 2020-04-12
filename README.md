@@ -2,11 +2,13 @@
 Collection of terminal applications for Manjaro and Arch based Systems (Bash TUI).
 - https://forum.manjaro.org/t/manjaro-cli-menu/129017
 
-How to run:
+How to install:
 - ```sudo pacman -Syu base-devel git```
 - ```git clone https://github.com/puxplaying/toolbox.git```
 - ```cd toolbox```
 - ```makepkg -srci```
+
+How to run:
 - ```toolbox```
 
 ---
