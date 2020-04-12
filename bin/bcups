@@ -280,16 +280,16 @@ function main {
 		    	echo ""
 	    	fi
             ;;
-				0|Q|q )
-				    printf '\33[H\33[2J' && exit
-				    ;;
-				$'\e'|$'\e'$'\e' ) # Pressing ESC will re-arrange the UI if the terminal has been resized
-				    ;;
-				* ) # do this, if $choice variable contains anything else not offered above
-				    echo -e "$ERRORMSG"
-				    echo -e "$TRYAGAINMSG"
-				    sleep 2
-				    ;;
+		0|Q|q )
+		    printf '\33[H\33[2J' && exit
+		    ;;
+		$'\e'|$'\e'$'\e' ) # Pressing ESC will re-arrange the UI if the terminal has been resized
+		    ;;
+		* ) # do this, if $choice variable contains anything else not offered above
+		    echo -e "$ERRORMSG"
+		    echo -e "$TRYAGAINMSG"
+		    sleep 2
+		    ;;
     esac
     done
 }
