@@ -179,6 +179,12 @@ function isitup() {
   echo ""
 }
 
+# Random Funny Message
+randArrayElement(){
+  arr=(" $RED Nice $BG Try $NC" " $RED Nope! $NC" " $RED Challange $BG Accepted $NC" " $RED Ha $BG Ha! $NC" " $RED You $BG Funny $NC" " $RED Really? $NC" " $RED I Love $BG FOSS $NC")
+  echo -e ${arr["$[RANDOM % ${#arr[@]}]"]}
+}
+
 # =======================
 # Sub Menu's
 # Startmenu for releasecompare
@@ -343,6 +349,11 @@ do
             echo -e " $RED Press $BG 1-7 $NC$RED to navigate and $BG Q $NC$RED to return to ToolBox $NC"
             sleep 3
             cmus
+            ;;
+        + )
+            printf '\33[H\33[2J'
+            randArrayElement "ARRAYISO[@]"
+            sleep 1
             ;;
         0|Q|q )
             printf '\33[H\33[2J' && exit
