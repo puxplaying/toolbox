@@ -180,8 +180,8 @@ function isitup() {
 }
 
 # Random Funny Message
-function randArrayElement(){
-  arr=(" $RED Nice $BG Try $NC" " $RED Nope! $NC" " $RED Challange $BG Accepted $NC" " $RED Ha $BG Ha! $NC" " $RED You $BG Funny $NC" " $RED Really? $NC" " $RED I Love $BG FOSS $NC" " $RED You're the $BG Boss $NC")
+function randArrayElement() {
+  arr=(" $RED Nice $BG Try $NC" " $RED Nope! $NC" " $RED Challange $BG Accepted $NC" " $RED Ha $BG Ha! $NC" " $RED You $BG Funny $NC" " $RED Really? $NC" " $RED I Love $BG FOSS $NC" " $RED You're the $BG Boss $NC" "$BG$TC T $NC$BG$TC O $NC$BG$TC O $NC$BG$TC L $NC $BG B $NC $BG O $NC $BG X $NC")
   echo -e ${arr["$[RANDOM % ${#arr[@]}]"]}
 }
 
@@ -246,7 +246,7 @@ do
     printf '\33[H\33[2J' # Use this instead of the clear command
 
     echo
-    echo -e "                              $BG$TC ToolBox $NC"
+    echo -e "                      $BG$TC T $NC$BG$TC O $NC$BG$TC O $NC$BG$TC L $NC $BG B $NC $BG O $NC $BG X $NC"
     echo -e " $TC+----------------------------------------------------------------+$NC"
     echo -e " $TC|$NC    $BG 1 $NC $E1      $TC|$NC    $BG 2 $NC $E2     $TC|$NC"
     echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
