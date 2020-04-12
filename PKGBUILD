@@ -1,7 +1,7 @@
 # Maintainer: puxplaying
 
 pkgname=toolbox
-pkgver=0.3
+pkgver=0.4
 pkgrel=1
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=(any)
