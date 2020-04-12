@@ -199,6 +199,21 @@ case "$choice" in
 }
 
 # =======================
+# Check if a website is up via https://isitup.org/
+function geturl() {
+  curl -sL https://isitup.org/$uservar | grep data-text= | cut -c 19- | rev | cut -c 11- | rev
+}
+
+function isitup() {
+  echo -e "Please type in the URL and press ENTER"
+  echo -e "For example: \e[7mforum.manjaro.org\e[0m"
+  read -p 'URL: ' uservar
+  echo ""
+  echo -e "\e[1m $(geturl) \e[0m"
+  echo ""
+}
+
+# =======================
 # Main UI code is below
 #
 function main {
@@ -210,12 +225,14 @@ E3="\e[1mH\e[0mardware and Drivers"
 E4="\e[1mF\e[0mile Manager"
 E5="\e[1mW\e[0meb Browser"
 E6="File \e[1mS\e[0mearch"
-E7="Syste\e[1mm\e[0m & Settings"
+E7="System & Settings"
 E8="Translate Shel\e[1ml\e[0m"
 E9="Manjaro \e[1mR\e[0melease Compare"
 E10="\e[1mT\e[0mask Manager"
 E11="\e[1mC\e[0mpu Frequency Info"
 E12="System \e[1mD\e[0miagnosis"
+E13="Website Status Check"
+E14="\e[1mM\e[0music Player"
 
 # Run infinite loop for UI / menu, till the user quits using the "quit" option or CTRL+C.
 while true
@@ -237,6 +254,8 @@ do
     echo -e " $TC|$NC    $BG 9 $NC $E9 $TC|$NC    $BG T $NC $E10           $TC|$NC"
     echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
     echo -e " $TC|$NC    $BG C $NC $E11      $TC|$NC    $BG D $NC $E12       $TC|$NC"
+    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+    echo -e " $TC|$NC    $BG U $NC $E13    $TC|$NC    $BG M $NC $E14           $TC|$NC"
     echo -e " $TC+----------------------------------------------------------------+$NC"
     echo -e "      \e[7mEsc\e[0m Refresh the UI"
     echo ""
@@ -283,7 +302,7 @@ do
             file_finder
             echo
             ;;
-        7|M|m )
+        7 )
             bmenu
             ;;
         8|L|l )
@@ -312,6 +331,19 @@ do
             ;;
         D|d )
             diagnosis-menu
+            ;;
+        U|u )
+            printf '\33[H\33[2J'
+            isitup
+            echo
+            echo -e " $RED Displaying Website Status Check. To return to ToolBox press ENTER $NC"
+            read -r
+            ;;
+        M|m )
+            printf '\33[H\33[2J'
+            echo -e " $RED Press $BG 1-7 $NC$RED to navigate and $BG Q $NC$RED to return to ToolBox $NC"
+            sleep 3
+            cmus
             ;;
         0|Q|q )
             printf '\33[H\33[2J' && exit

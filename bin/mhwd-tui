@@ -106,7 +106,8 @@ E7="\e[1mS\e[0mystem Temperatures"
 E8="\e[1mD\e[0misk Usage"
 E9="\e[1mH\e[0mome Folder Usage"
 E10="\e[1mB\e[0mios Information"
-E11="\e[1mP\e[0mower Consumption"
+E11="P\e[1mo\e[0mwer Consumption"
+E12="\e[1mP\e[0mrinters"
 
 
 # Run infinite loop for UI / menu, till the user quits using the "quit" option or CTRL+C.
@@ -128,7 +129,7 @@ do
     echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
     echo -e " $TC|$NC    $BG 9 $NC $E9       $TC|$NC    $BG B $NC $E10       $TC|$NC"
     echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
-    echo -e " $TC|$NC    $BG P $NC $E11       $TC|$NC    $BG$TC T $NC$BG$TC O $NC$BG$TC O $NC$BG$TC L $NC $BG B $NC $BG O $NC $BG X $NC $E12  $TC|$NC"
+    echo -e " $TC|$NC    $BG O $NC $E11       $TC|$NC    $BG P $NC $E12               $TC|$NC"
     echo -e " $TC+----------------------------------------------------------------+$NC"
     echo -e "      \e[7mEsc\e[0m Refresh the UI"
     echo ""
@@ -213,7 +214,7 @@ do
             # wait for input, e.g. by pressing ENTER:
             read -r
             ;;
-        P|p)
+        O|o)
             printf '\33[H\33[2J'
             if [[ -f /usr/bin/powertop ]]
             then
@@ -231,6 +232,10 @@ do
             echo -e " $RED To return to Hardware and Drivers press ENTER $NC"
             # wait for input, e.g. by pressing ENTER:
             read -r
+            ;;
+        P|p)
+            printf '\33[H\33[2J'
+            bcups
             ;;
         0|Q|q )
             printf '\33[H\33[2J' && exit

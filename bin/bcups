@@ -1,0 +1,297 @@
+#!/bin/bash
+
+# =======================
+# Define Colors
+RED='\e[41m'
+BLUE='\e[44m'
+ORANGE='\e[46m'
+NC='\e[0m' # No color
+BG='\e[7m' # Highlighting Background color
+TC='\e[1m' # Highlighting Text color
+
+browser='elinks'
+printers=$(lpstat -p -d | awk '/printer/ {print $2}')
+enabled_printers=$(lpstat -p -d | awk '/enabled/ {print $2}')
+STATUSVAR=1
+
+# =======================
+# Service messages section
+# Wrong Option
+ERRORMSG="$RED Wrong option $NC"
+TRYAGAINMSG=" Please try again..."
+CONTINMSG="$RED To return press ENTER $NC"
+XSANEINSTMSG="Xsane is not installed and pacman seems to be in use"
+SELECTDEFAULTPRINTERMSG="Select new default printer"
+DEFAULTPRINTERSETMSG="The new default printer has been set"
+SELECTFILESFORPRINTMSG="Select the files to print (use TAB to mark files for printing)"
+SELECTPRINTERTOUSEMSG="Select the printer to use"
+SELECTFILESFORPRINTINGMSG="Select the files to print (use TAB to mark files for printing)"
+PRINTINGMSG="Printing now"
+SEARCHINGSCANNERSMSG="Searching for scanners... Select one"
+SELECTDEFAULTSCANNERMSG="Searching for scanners... Select new default"
+IMGFILETYPECHOOSEMSG="Which filetype should be used? "
+NAMEFORSCANNEDFILEMSG="What name shall be given to the scanned file?"
+
+function pressanykeyrequest {
+	echo -e "$CONTINMSG"
+	read -r
+	STATUSVAR=1
+}
+
+function scanner_interface {
+	if [ -e /usr/bin/xsane ]; then
+		xsane
+		STATUSVAR=$?
+	else
+		if [ - e /var/lib/pacman/db.lck ]; then
+			echo "$XSANEINSTMSG"
+			STATUSVAR=$?
+		else
+			sudo pacman -Sy xsane && xsane
+			STATUSVAR=$?
+		fi
+	fi
+return $STATUSVAR
+}
+
+function webinterface {
+  $browser http://localhost:631
+  STATUSVAR=$?
+return $STATUSVAR
+}
+
+function set_default_printer {
+  lpoptions -d $(echo $printers | fzf -e --reverse --prompt="$SELECTDEFAULTPRINTERMSG >")
+  STATUSVAR=$?
+  if [ $STATUSVAR -eq 0 ]; then
+  	echo ""
+  	echo ""
+  	echo "$DEFAULTPRINTERSETMSG"
+  fi
+return $STATUSVAR
+}
+
+function print_file {
+  grep -q "Default" ~/.cups/lpoptions && \
+  lpr $(fzf -m --reverse --prompt=" $SELECTFILESFORPRINTMSG >") || \
+  lpr -P $(echo $printers | fzf -e --reverse --prompt="$SELECTPRINTERTOUSEMSG >") $(fzf -m --reverse --prompt="$SELECTFILESFORPRINTINGMSG >")
+  STATUSVAR=$?
+  if [ $STATUSVAR -eq 0 ]; then
+  	echo ""
+  	echo ""
+  	echo "$PRINTINGMSG"
+  	sleep 3
+  fi
+return $STATUSVAR
+}
+
+function select_scanner {
+  scanimage -L 2> /dev/null | fzf -e --reverse --prompt="$SEARCHINGSCANNERSMSG >" | awk '{print substr($2, 2, length($2) - 2)}'
+  STATUSVAR=$?
+return $STATUSVAR
+}
+
+function set_default_scanner {
+  default_scanner=$(scanimage -L 2> /dev/null | \
+  fzf -e --reverse --prompt="$SELECTDEFAULTSCANNERMSG >" | \
+  awk '{print $2} {print substr($2, 2, length($2) - 2)}')
+  STATUSVAR=$?
+  if [ $STATUSVAR -eq 0 ] && [ "$default_scanner" != "" ]; then
+  	echo "export SANE_DEFAULT_DEVICE=$default_scanner" >> $HOME/.profile
+  	SANE_DEFAULT_DEVICE="$default_scanner"
+  fi
+return $STATUSVAR
+}
+
+function select_filetype {
+PS3="$IMGFILETYPECHOOSEMSG"
+# Gather the results in an array.
+filetypes=("pnm" "tiff" "png" "jpeg")
+
+select pick in "${filetypes[@]}"
+do
+	case $pick in
+		*)	echo $pick
+			break
+	esac
+done
+}
+
+function scan {
+  echo "$NAMEFORSCANNEDFILEMSG"
+  read filename
+  # check file name function needs
+  if [ "$filename" != "" ]; then
+  	eval filetype=$(select_filetype)
+  	if [ "$filetype" != "" ]; then
+  	  	scanner=$(select_scanner)
+  		if [ "$scanner" != "" ]; then
+  			scanimage -p -d $scanner --format=$filetype > $filename.$filetype
+  			STATUSVAR=$?
+  		else
+  			STATUSVAR=1
+  		fi
+  	else
+  		STATUSVAR=1
+  	fi
+  else
+  	STATUSVAR=1
+  fi
+return $STATUSVAR
+}
+
+function default_scan {
+  echo "$NAMEFORSCANNEDFILEMSG"
+  read filename
+  # check file name function needs
+  if [ "$filename" != "" ]; then
+  	eval filetype=$(select_filetype)
+  	if [ "$filetype" != "" ]; then
+  	  	scanimage -p --format=$filetype > $filename.$filetype
+  		STATUSVAR=$?
+  	else
+  		STATUSVAR=1
+  	fi
+  else
+  	STATUSVAR=1
+  fi
+return $STATUSVAR
+}
+
+
+function main {
+
+	# Define Menu entries which will be run with the echo command
+	E0="\e[1mQ\e[0muit"
+	E1="Manage Printers"
+	E2="Print Files"
+	E3="Set Default Printer"
+	E4="List Printers"
+	E5="Set Default Scanner"
+	E6="Scan With GUI"
+	E7="List Scanners"
+	E8="Scan Using Defaults"
+
+    while true; do
+			printf '\33[H\33[2J' # Use this instead of the clear command
+
+			echo
+			echo -e "                       $BG$TC Printers and Scanners $NC"
+			echo -e " $TC+----------------------------------------------------------------+$NC"
+			echo -e " $TC|$NC    $BG 1 $NC $E1         $TC|$NC    $BG 2 $NC $E2            $TC|$NC"
+			echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+			echo -e " $TC|$NC    $BG 3 $NC $E3     $TC|$NC    $BG 4 $NC $E4          $TC|$NC"
+			echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+			echo -e " $TC|$NC    $BG 5 $NC $E5     $TC|$NC    $BG 6 $NC $E6          $TC|$NC"
+			echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+			echo -e " $TC|$NC    $BG 7 $NC $E7 $NC          $TC|$NC    $BG 8 $NC $E8    $TC|$NC"
+			echo -e " $TC+----------------------------------------------------------------+$NC"
+			echo -e "      \e[7mEsc\e[0m Refresh the UI"
+			echo ""
+			echo -e "  Enter marked number             -    $BG 0 $NC $E0 "
+
+			# save entered number/letter in variable "choice"
+			read -s -n1 choice
+			# convert "choice" variable to lowercase:
+			choice="$(echo "$choice" | tr '[:upper:]' '[:lower:]' )"
+			echo
+
+
+			# test, whether "choice" fits any of the following numbers or letters
+			case "$choice" in
+
+        1)
+            echo
+            webinterface
+            STATUSVAR=$?
+            if [ $STATUSVAR -eq 0 ]; then
+		    	pressanykeyrequest
+	    	else
+		    	echo ""
+	    	fi
+            ;;
+        2)
+            echo
+            print_file
+            STATUSVAR=$?
+            if [ $STATUSVAR -eq 0 ]; then
+		    	pressanykeyrequest
+	    	else
+		    	echo ""
+	    	fi
+            ;;
+        3)
+            echo
+            set_scanner
+            STATUSVAR=$?
+            if [ $STATUSVAR -eq 0 ]; then
+		    	pressanykeyrequest
+	    	else
+		    	echo ""
+	    	fi
+            ;;
+        4)
+            echo
+            lpstat -p -d
+            STATUSVAR=$?
+            if [ $STATUSVAR -eq 0 ]; then
+		    	pressanykeyrequest
+	    	else
+		    	echo ""
+	    	fi
+            ;;
+        5)
+            echo
+            set_default_scanner
+            STATUSVAR=$?
+            if [ $STATUSVAR -eq 0 ]; then
+		    	pressanykeyrequest
+	    	else
+		    	echo ""
+	    	fi
+            ;;
+        6)
+            echo
+            scanner_inerface
+            STATUSVAR=$?
+            if [ $STATUSVAR -eq 0 ]; then
+		    	pressanykeyrequest
+	    	else
+		    	echo ""
+	    	fi
+            ;;
+        7)
+            echo
+            scanimage -L 2> /dev/null
+            STATUSVAR=$?
+            if [ $STATUSVAR -eq 0 ]; then
+		    	pressanykeyrequest
+	    	else
+		    	echo ""
+	    	fi
+            ;;
+        8)
+            echo
+            default_scan
+            STATUSVAR=$?
+            if [ $STATUSVAR -eq 0 ]; then
+		    	pressanykeyrequest
+	    	else
+		    	echo ""
+	    	fi
+            ;;
+				0|Q|q )
+				    printf '\33[H\33[2J' && exit
+				    ;;
+				$'\e'|$'\e'$'\e' ) # Pressing ESC will re-arrange the UI if the terminal has been resized
+				    ;;
+				* ) # do this, if $choice variable contains anything else not offered above
+				    echo -e "$ERRORMSG"
+				    echo -e "$TRYAGAINMSG"
+				    sleep 2
+				    ;;
+    esac
+    done
+}
+
+main
