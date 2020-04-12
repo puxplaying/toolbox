@@ -181,7 +181,7 @@ function isitup() {
 
 # Random Funny Message
 randArrayElement(){
-  arr=(" $RED Nice $BG Try $NC" " $RED Nope! $NC" " $RED Challange $BG Accepted $NC" " $RED Ha $BG Ha! $NC" " $RED You $BG Funny $NC" " $RED Really? $NC" " $RED I Love $BG FOSS $NC")
+  arr=(" $RED Nice $BG Try $NC" " $RED Nope! $NC" " $RED Challange $BG Accepted $NC" " $RED Ha $BG Ha! $NC" " $RED You $BG Funny $NC" " $RED Really? $NC" " $RED I Love $BG FOSS $NC" " $RED You're the $BG Boss $NC")
   echo -e ${arr["$[RANDOM % ${#arr[@]}]"]}
 }
 
