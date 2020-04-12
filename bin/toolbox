@@ -165,6 +165,20 @@ function sysinfo {
 	fi
 }
 
+# Check if a website is up via https://isitup.org/
+function geturl() {
+  curl -sL https://isitup.org/$uservar | grep data-text= | cut -c 19- | rev | cut -c 11- | rev
+}
+
+function isitup() {
+  echo -e "Please type in the URL and press ENTER"
+  echo -e "For example: \e[7mforum.manjaro.org\e[0m"
+  read -p 'URL: ' uservar
+  echo ""
+  echo -e "\e[1m $(geturl) \e[0m"
+  echo ""
+}
+
 # =======================
 # Sub Menu's
 # Startmenu for releasecompare
@@ -196,21 +210,6 @@ case "$choice" in
             sleep 2
             ;;
     esac
-}
-
-# =======================
-# Check if a website is up via https://isitup.org/
-function geturl() {
-  curl -sL https://isitup.org/$uservar | grep data-text= | cut -c 19- | rev | cut -c 11- | rev
-}
-
-function isitup() {
-  echo -e "Please type in the URL and press ENTER"
-  echo -e "For example: \e[7mforum.manjaro.org\e[0m"
-  read -p 'URL: ' uservar
-  echo ""
-  echo -e "\e[1m $(geturl) \e[0m"
-  echo ""
 }
 
 # =======================
