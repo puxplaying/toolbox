@@ -64,7 +64,7 @@ function system_diagnosis_ui {
 
           1|p|P )
               printf '\33[H\33[2J'
-              cat /var/log/pacman.log | fzf -e +s --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              cat /var/log/pacman.log | fzf -e +s --tac --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
               echo
               echo -e " $RED Displaying Pacman Log. To return to System Diagnosis press ENTER $NC"
               # wait for input, e.g. by pressing ENTER:
