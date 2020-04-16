@@ -151,7 +151,7 @@ function taskmanager {
 function sysinfo {
   if [ -e /usr/bin/inxi ]
   then
-    sudo inxi -v8 | tee $HOME/.inxi.txt
+    sudo inxi -v8 | tee .inxi.txt &>/dev/null
     cat .inxi.txt | fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
     rm -rf $HOME/.inxi.txt
 	else
