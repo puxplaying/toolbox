@@ -472,11 +472,7 @@ function main {
 			echo -e "  Enter marked number or letter   -    $BG 0 $NC $E0 "
 
 			# save entered number/letter in variable "choice"
-			read -s -n1 choice
-			# convert "choice" variable to lowercase:
-			choice="$(echo "$choice" | tr '[:upper:]' '[:lower:]' )"
-			echo
-
+    		read -r -n 1 -e choice
 
 			# test, whether "choice" fits any of the following numbers or letters
 			case "$choice" in
