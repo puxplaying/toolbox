@@ -554,10 +554,10 @@ function main {
             printf '\33[H\33[2J' && exit
             ;;
         *)
-	    echo -e "$ERRORMSG"
+	    	echo -e "$ERRORMSG"
 			echo -e "$TRYAGAINMSG"
-	    sleep 2
-	    ;;
+	    	sleep 2
+	    	;;
 	esac
 	done
 }

@@ -9,9 +9,12 @@ NC='\e[0m' # No color
 BG='\e[7m' # Highlighting Background color
 TC='\e[1m' # Highlighting Text color
 
+# =======================
 # Service messages section
+# Wrong Option
 ERRORMSG="$RED Wrong.$NC"
 TRYAGAINMSG="$RED Press any key and try again$NC"
+#
 INSTALLINGTIMESETMSG="Installing timeset to manage time"
 TIMESETNOTINSTMSG="Timeset is not installed and pacman seems to be in use"
 
@@ -108,10 +111,10 @@ function main {
             init_settings
             echo ""
             ;;
-		0|Q|q )
+		0|Q|q)
 			printf '\33[H\33[2J' && exit
 		    ;;
-		* ) # do this, if $choice variable contains anything else not offered above
+		*) # do this, if $choice variable contains anything else not offered above
 		    echo -e "$ERRORMSG"
 		    echo -e "$TRYAGAINMSG"
 		    sleep 2

@@ -10,6 +10,7 @@ NC='\e[0m' # No color
 BG='\e[7m' # Highlighting Background color
 TC='\e[1m' # Highlighting Text color
 
+# =======================
 # Service messages section
 # Wrong Option
 ERRORMSG="$RED Wrong option $NC"
@@ -252,10 +253,10 @@ function main {
 			echo -e "$RED To return press ENTER $NC"
             read -r
             ;;
-		0|Q|q )
+		0|Q|q)
 	        printf '\33[H\33[2J' && exit
 	        ;;
-	    * ) # do this, if $choice variable contains anything else not offered above
+	    *) # do this, if $choice variable contains anything else not offered above
 	        echo -e "$ERRORMSG"
 	        echo -e "$TRYAGAINMSG"
 	        sleep 2

@@ -13,6 +13,7 @@ STATUSVAR=1
 TEXTEDITOR=$EDITOR
 SELECTEDITEM=""
 
+# =======================
 # Service messages section
 # Wrong Option
 ERRORMSG="$RED Wrong option $NC"
@@ -547,10 +548,10 @@ function main {
             photorec
             echo ""
             ;;
-		0|Q|q )
+		0|Q|q)
 		    printf '\33[H\33[2J' && exit
 		    ;;
-		* ) # do this, if $choice variable contains anything else not offered above
+		*) # do this, if $choice variable contains anything else not offered above
 		    echo -e "$ERRORMSG"
 		    echo -e "$TRYAGAINMSG"
 		    sleep 2

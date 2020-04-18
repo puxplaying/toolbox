@@ -19,6 +19,7 @@ STATUSVAR=1
 # Wrong Option
 ERRORMSG="$RED Wrong option $NC"
 TRYAGAINMSG=" Please try again..."
+#
 CONTINMSG="$RED To return press ENTER $NC"
 XSANEINSTMSG="Xsane is not installed and pacman seems to be in use"
 SELECTDEFAULTPRINTERMSG="Select new default printer"
@@ -275,10 +276,10 @@ function main {
 		    	echo ""
 	    	fi
             ;;
-		0|Q|q )
+		0|Q|q)
 		    printf '\33[H\33[2J' && exit
 		    ;;
-		* ) # do this, if $choice variable contains anything else not offered above
+		*) # do this, if $choice variable contains anything else not offered above
 		    echo -e "$ERRORMSG"
 		    echo -e "$TRYAGAINMSG"
 		    sleep 2
