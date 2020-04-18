@@ -189,7 +189,6 @@ function main {
     echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
     echo -e " $TC|$NC    $BG 9 $NC $E9 	          $TC|$NC    $BG$TC T $NC$BG$TC O $NC$BG$TC O $NC$BG$TC L $NC $BG B $NC $BG O $NC $BG X $NC $E12  $TC|$NC"
     echo -e " $TC+----------------------------------------------------------------+$NC"
-    echo -e "      \e[7mEsc\e[0m Refresh the UI"
     echo ""
     echo -e "  Enter marked number             -    $BG 0 $NC $E0 "
 
@@ -272,16 +271,14 @@ function main {
             echo ""
             pressanykeyrequest
             ;;
-				0|Q|q )
-		        printf '\33[H\33[2J' && exit
-		        ;;
-		    $'\e'|$'\e'$'\e' ) # Pressing ESC will re-arrange the UI if the terminal has been resized
-		        ;;
-		    * ) # do this, if $choice variable contains anything else not offered above
-		        echo -e "$ERRORMSG"
-		        echo -e "$TRYAGAINMSG"
-		        sleep 2
-		        ;;
+		0|Q|q )
+		    printf '\33[H\33[2J' && exit
+		    ;;
+		* ) # do this, if $choice variable contains anything else not offered above
+		    echo -e "$ERRORMSG"
+		    echo -e "$TRYAGAINMSG"
+		    sleep 2
+		    ;;
     esac
     done
 }

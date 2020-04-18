@@ -176,7 +176,6 @@ function main {
 	    echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
 	    echo -e " $TC|$NC    $BG L $NC $E10  	  	  $TC|$NC    $BG$TC T $NC$BG$TC O $NC$BG$TC O $NC$BG$TC L $NC $BG B $NC $BG O $NC $BG X $NC $E12  $TC|$NC"
 	    echo -e " $TC+----------------------------------------------------------------+$NC"
-	    echo -e "      \e[7mEsc\e[0m Refresh the UI"
 	    echo ""
 	    echo -e "  Enter marked number or letter   -    $BG 0 $NC $E0 "
 
@@ -193,76 +192,74 @@ function main {
         2)
             echo
             toggle_tap_to_click
-						echo
-						echo -e "$RED To return press ENTER $NC"
+			echo
+			echo -e "$RED To return press ENTER $NC"
             read -r
             ;;
         3)
             echo
             toggle_drag_lock
-						echo
-						echo -e "$RED To return press ENTER $NC"
+			echo
+			echo -e "$RED To return press ENTER $NC"
             read -r
             ;;
         4)
             echo
             toggle_left_handed
-						echo
-						echo -e "$RED To return press ENTER $NC"
+			echo
+			echo -e "$RED To return press ENTER $NC"
             read -r
 	   		;;
 	   	5)
             echo
             toggle_disable_while_typing
-						echo
-						echo -e "$RED To return press ENTER $NC"
+			echo
+			echo -e "$RED To return press ENTER $NC"
             read -r
             ;;
         6)
             echo
             toggle_natural_scrolling
-						echo
-						echo -e "$RED To return press ENTER $NC"
+			echo
+			echo -e "$RED To return press ENTER $NC"
             read -r
             ;;
         7)
             echo
             toggle_horizontal_scrolling
-						echo
-						echo -e "$RED To return press ENTER $NC"
+			echo
+			echo -e "$RED To return press ENTER $NC"
             read -r
             ;;
         8)
             echo
             man xinput
-						echo
-						echo -e "$RED To return press ENTER $NC"
+			echo
+			echo -e "$RED To return press ENTER $NC"
             read -r
             ;;
         9)
             echo
             xdg-open https://wiki.archlinux.org/index.php/Touchpad_Synaptics
-						echo
-						echo -e "$RED To return press ENTER $NC"
+			echo
+			echo -e "$RED To return press ENTER $NC"
             read -r
             ;;
         l|L)
             echo
             gui
-						echo
-						echo -e "$RED To return press ENTER $NC"
+			echo
+			echo -e "$RED To return press ENTER $NC"
             read -r
             ;;
-				0|Q|q )
-		        printf '\33[H\33[2J' && exit
-		        ;;
-		    $'\e'|$'\e'$'\e' ) # Pressing ESC will re-arrange the UI if the terminal has been resized
-		        ;;
-		    * ) # do this, if $choice variable contains anything else not offered above
-		        echo -e "$ERRORMSG"
-		        echo -e "$TRYAGAINMSG"
-		        sleep 2
-		        ;;
+		0|Q|q )
+	        printf '\33[H\33[2J' && exit
+	        ;;
+	    * ) # do this, if $choice variable contains anything else not offered above
+	        echo -e "$ERRORMSG"
+	        echo -e "$TRYAGAINMSG"
+	        sleep 2
+	        ;;
     esac
     done
 }

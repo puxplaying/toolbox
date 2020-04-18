@@ -186,7 +186,6 @@ function main {
 			echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
 			echo -e " $TC|$NC    $BG 7 $NC $E7 $NC          $TC|$NC    $BG 8 $NC $E8    $TC|$NC"
 			echo -e " $TC+----------------------------------------------------------------+$NC"
-			echo -e "      \e[7mEsc\e[0m Refresh the UI"
 			echo ""
 			echo -e "  Enter marked number             -    $BG 0 $NC $E0 "
 
@@ -278,8 +277,6 @@ function main {
             ;;
 		0|Q|q )
 		    printf '\33[H\33[2J' && exit
-		    ;;
-		$'\e'|$'\e'$'\e' ) # Pressing ESC will re-arrange the UI if the terminal has been resized
 		    ;;
 		* ) # do this, if $choice variable contains anything else not offered above
 		    echo -e "$ERRORMSG"
