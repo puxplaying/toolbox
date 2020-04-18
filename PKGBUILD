@@ -2,7 +2,7 @@
 
 _pkgname=toolbox
 pkgname=$_pkgname-git
-pkgver=0.6
+pkgver=0.7
 pkgrel=1
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=(any)
