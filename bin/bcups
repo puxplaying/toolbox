@@ -43,7 +43,7 @@ function scanner_interface {
 		xsane
 		STATUSVAR=$?
 	else
-		if [ - e /var/lib/pacman/db.lck ]; then
+		if [ -e /var/lib/pacman/db.lck ]; then
 			echo "$XSANEINSTMSG"
 			STATUSVAR=$?
 		else

@@ -34,6 +34,12 @@ MHWDTUINOTINSTMSG="Mhwd-tui is not installed and Pacman seems to be in use"
 # inxi
 INSTALLINGINXIMSG="Installing inxi to display system information"
 INXINOTINSTMSG="inxi is not installed and Pacman seems to be in use"
+# cpupower
+INSTALLINGCPUPOWERMSG="Installing cpupower to display frequency-info"
+CPUPOWERNOTINSTMSG="cpupower is not installed and Pacman seems to be in use"
+# cmus
+INSTALLINGCMUSMSG="Installing cmus to play music"
+CMUSNOTINSTMSG="cmus is not installed and Pacman seems to be in use"
 
 # =======================
 # Main Menu functions
@@ -81,7 +87,7 @@ function cli_filemanager {
 		mc
 	else
 		echo "$INSTALLINGRNG1MSG"
-		if [ - e /var/lib/pacman/db.lck ]
+		if [ -e /var/lib/pacman/db.lck ]
     then
 			echo "$CLIFMNOTINSTMSG"
 		else
@@ -121,8 +127,8 @@ function file_finder {
   then
 		rifle $(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")
 	else
-		echo "$INSTALLINGRNG2MSG"
-		if [ - e /var/lib/pacman/db.lck ]
+		echo "$INSTALLINGRNG1MSG"
+		if [ -e /var/lib/pacman/db.lck ]
     then
 			echo "$RIFLENOTINSTMSG"
 		else
@@ -138,7 +144,7 @@ function taskmanager {
 		htop
 	else
 		echo "$INSTALLINGHTOPMSG"
-    if [ - e /var/lib/pacman/db.lck ]
+    if [ -e /var/lib/pacman/db.lck ]
     then
       echo "$HTOPNOTINSTMSG"
     else
@@ -157,13 +163,53 @@ function sysinfo {
     rm -rf .inxi.txt
 	else
 		echo "$INSTALLINGINXIMSG"
-    if [ - e /var/lib/pacman/db.lck ]
+    if [ -e /var/lib/pacman/db.lck ]
     then
       echo "$INXINOTINSTMSG"
     else
 		  sudo pacman -Sy inxi && inxi -v8 | fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
     fi
 	fi
+}
+
+# Cpupower frequency-info
+function freqinfo() {
+  if [ -e /usr/bin/cpupower ]
+  then
+    cpupower frequency-info
+    echo
+    echo -e " $RED Displaying frequency-info. To return to ToolBox press ENTER $NC"
+    read -r
+  else
+    echo "$INSTALLINGCPUPOWERMSG"
+    if [ -e /var/lib/pacman/db.lck ]
+    then
+      echo "$CPUPOWERNOTINSTMSG"
+    else
+    	sudo pacman -Sy cpupower && cpupower frequency-info
+      echo
+      echo -e " $RED Displaying frequency-info. To return to ToolBox press ENTER $NC"
+      read -r
+    fi
+  fi
+}
+
+# Music Player
+function music() {
+  if [ -e /usr/bin/cmus ]
+  then
+    echo -e " $RED Press $BG 1-7 $NC$RED to navigate and $BG Q $NC$RED to return to ToolBox $NC"
+    sleep 3
+    cmus
+  else
+    echo "$INSTALLINGCMUSMSG"
+    if [ -e /var/lib/pacman/db.lck ]
+    then
+      echo "$CMUSNOTINSTMSG"
+    else
+    	sudo pacman -Sy cmus && cmus
+    fi
+  fi
 }
 
 # Check if a website is up via https://isitup.org/
@@ -330,10 +376,7 @@ do
             ;;
         C|c )
             printf '\33[H\33[2J'
-            cpupower frequency-info
-            echo
-            echo -e " $RED Displaying frequency-info. To return to ToolBox press ENTER $NC"
-            read -r
+            freqinfo
             ;;
         D|d )
             diagnosis-menu
@@ -347,9 +390,7 @@ do
             ;;
         M|m )
             printf '\33[H\33[2J'
-            echo -e " $RED Press $BG 1-7 $NC$RED to navigate and $BG Q $NC$RED to return to ToolBox $NC"
-            sleep 3
-            cmus
+            music
             ;;
         + )
             printf '\33[H\33[2J'

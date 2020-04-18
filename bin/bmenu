@@ -12,18 +12,8 @@ TC='\e[1m' # Highlighting Text color
 # Service messages section
 ERRORMSG="$RED Wrong.$NC"
 TRYAGAINMSG="$RED Press any key and try again$NC"
-INSTALLINGRNG1MSG="Installing ranger to manage files"
-INSTALLINGRNG2MSG="Installing ranger to get a rifle"
 INSTALLINGTIMESETMSG="Installing timeset to manage time"
-INSTALLINGHTOPMSG="Installing htop to manage tasks"
-INSTALLINGBRANDRMSG="Installing brandr to manage display"
-INSTALLINGMHWDTUIMSG="Installing mhwd-tui to manage kernels and drivers"
-CLIFMNOTINSTMSG="No cli filemanager is installed and pacman seems to be in use"
-RIFLENOTINSTMSG="Rifle is not installed and pacman seems to be in use"
 TIMESETNOTINSTMSG="Timeset is not installed and pacman seems to be in use"
-CLIBROWSNOTINSTMSG="No cli browser installed and pacman seems to be in use"
-BRANDRNOTINSTMSG="Brandr is not installed and pacman seems to be in use"
-MHWDTUINOTINSTMSG="Mhwd-tui is not installed and pacman seems to be in use"
 
 if [ $(cat /proc/1/comm) = "systemd" ]; then
 	systemctl status NetworkManager.service 2>/dev/null | grep -q " active " && netcommand="nmtui"
