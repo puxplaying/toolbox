@@ -125,14 +125,14 @@ function cli_browser {
 function file_finder {
 	if [ -e /usr/bin/rifle ]
   then
-		rifle $(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")
+		rifle "$(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")"
 	else
 		echo "$INSTALLINGRNG1MSG"
 		if [ -e /var/lib/pacman/db.lck ]
     then
 			echo "$RIFLENOTINSTMSG"
 		else
-			sudo pacman -Sy ranger && rifle $(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")
+			sudo pacman -Sy ranger && rifle "$(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")"
 		fi
 	fi
 }
@@ -159,7 +159,7 @@ function sysinfo {
   then
     sudo inxi -v8 | tee .inxi.txt &>/dev/null
     printf '\33[H\33[2J'
-    cat .inxi.txt | fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
+    < .inxi.txt fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
     rm -rf .inxi.txt
 	else
 		echo "$INSTALLINGINXIMSG"
@@ -214,7 +214,7 @@ function music() {
 
 # Check if a website is up via https://isitup.org/
 function geturl() {
-  curl -sL https://isitup.org/$uservar | grep data-text= | cut -c 19- | rev | cut -c 11- | rev
+  curl -sL https://isitup.org/"$uservar" | grep data-text= | cut -c 19- | rev | cut -c 11- | rev
 }
 
 function isitup() {
@@ -229,7 +229,7 @@ function isitup() {
 # Random Funny Message
 function randArrayElement() {
   arr=(" $RED Nice $BG Try $NC" " $RED Nope! $NC" " $RED Challange $BG Accepted $NC" " $RED Ha $BG Ha! $NC" " $RED You $BG Funny $NC" " $RED Really? $NC" " $RED I Love $BG FOSS $NC" " $RED You're the $BG Boss $NC" "$BG$TC T $NC$BG$TC O $NC$BG$TC O $NC$BG$TC L $NC $BG B $NC $BG O $NC $BG X $NC")
-  echo -e ${arr["$[RANDOM % ${#arr[@]}]"]}
+  echo -e "${arr["$((RANDOM % ${#arr[@]}))"]}"
 }
 
 # =======================
@@ -245,7 +245,7 @@ function releasecompare_startmenu() {
   echo "  1) Compare only"
   echo "  2) Installation Options"
   echo "  0) Quit"
-read -s -n1 choice
+read -r -n 1 -e choice
 case "$choice" in
         1)
             echo "you chose to compare only"
