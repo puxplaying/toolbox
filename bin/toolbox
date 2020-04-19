@@ -350,7 +350,7 @@ do
             echo
             ;;
         7 )
-            bmenu
+            system-menu
             ;;
         8|L|l )
             printf '\33[H\33[2J'
