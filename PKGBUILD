@@ -1,7 +1,7 @@
 # Maintainer: puxplaying
 
 pkgname=bmenu
-pkgver=0.6
+pkgver=0.8
 pkgrel=1
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=(any)
