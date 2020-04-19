@@ -1,3 +1,4 @@
+# Maintainer: Chrysostomus @forum.manjaro.org
 # Maintainer: puxplaying
 
 pkgname=bmenu
