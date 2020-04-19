@@ -23,7 +23,7 @@ HTOPNOTINSTMSG="Htop is not installed and Pacman seems to be in use"
 # File Search
 RIFLENOTINSTMSG="Rifle is not installed and Pacman seems to be in use"
 # Web Browser
-INSTALLINGCLIBRWOSMSG="Installing elinks to surf the web"
+INSTALLINGCLIBRWOSMSG="Installing links to surf the web"
 CLIBROWSNOTINSTMSG="No cli browser installed and Pacman seems to be in use"
 # PacUI
 INSTALLINGPACUIMSG="Installing PacUI for package management"
@@ -98,12 +98,12 @@ function cli_filemanager {
 
 # Web Browser
 function cli_browser {
-	if [ -e /usr/bin/elinks ]
-  then
-		elinks
-	elif [ -e /usr/bin/links ]
+	if [ -e /usr/bin/links ]
   then
 		links
+	elif [ -e /usr/bin/elinks ]
+  then
+		elinks
 	elif [ -e /usr/bin/w3m ]
   then
 		w3m
@@ -116,7 +116,7 @@ function cli_browser {
     then
 			echo "$CLIBROWSNOTINSTMSG"
 		else
-			sudo pacman -Sy elinks && elinks
+			sudo pacman -Sy links && links
 		fi
 	fi
 }
