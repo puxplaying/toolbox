@@ -14,15 +14,15 @@ TC='\e[1m' # Highlighting Text color
 # Wrong Option
 ERRORMSG="$RED Wrong option $NC"
 TRYAGAINMSG=" Please try again..."
-# File Manager
+# File Manager (Ranger)
 INSTALLINGRNG1MSG="Installing ranger to manage files"
 CLIFMNOTINSTMSG="No cli filemanager is installed and Pacman seems to be in use"
-# Task Manager (Htop)
-INSTALLINGHTOPMSG="Installing htop to manage tasks"
-HTOPNOTINSTMSG="Htop is not installed and Pacman seems to be in use"
-# File Search
+# Task Manager (bashtop)
+INSTALLINGTASKMANMSG="Installing bashtop to manage tasks"
+TASKMANNOTINSTMSG="Bashtop is not installed and Pacman seems to be in use"
+# File Search (Rifle)
 RIFLENOTINSTMSG="Rifle is not installed and Pacman seems to be in use"
-# Web Browser
+# Web Browser (Links)
 INSTALLINGCLIBRWOSMSG="Installing links to surf the web"
 CLIBROWSNOTINSTMSG="No cli browser installed and Pacman seems to be in use"
 # PacUI
@@ -139,16 +139,16 @@ function file_finder {
 
 # Taskmanager
 function taskmanager {
-	if [ -e /usr/bin/htop ]
+	if [ -e /usr/bin/bashtop ]
   then
-		htop
+		bashtop
 	else
-		echo "$INSTALLINGHTOPMSG"
+		echo "$INSTALLINGTASKMANMSG"
     if [ -e /var/lib/pacman/db.lck ]
     then
-      echo "$HTOPNOTINSTMSG"
+      echo "$TASKMANNOTINSTMSG"
     else
-		  sudo pacman -Sy htop && htop
+		  sudo pacman -Sy bashtop && bashtop
     fi
 	fi
 }
