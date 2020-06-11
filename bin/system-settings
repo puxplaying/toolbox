@@ -74,13 +74,13 @@ function main {
 
 	# Define Menu entries which will be run with the echo command
 	E0="\e[1mQ\e[0muit"
-	E1="Pacman settings"
+	E1="Pacman Settings"
 	E2="Mkinitcpio"
 	E3="Fstab"
 	E4="Sudoers"
 	E5="Logind"
 	E6="Bootloader"
-	E7="Udevil settings"
+	E7="Udevil Settings"
 	E8="Xinitrc"
 	E9="Setup"
 
