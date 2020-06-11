@@ -157,10 +157,11 @@ function taskmanager {
 function sysinfo {
   if [ -e /usr/bin/inxi ]
   then
-    sudo inxi -v8 | tee .inxi.txt &>/dev/null
+    cd "$HOME"
+    sudo inxi -v8 | tee "$HOME/.inxi.txt" &>/dev/null
     printf '\33[H\33[2J'
-    < .inxi.txt fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
-    rm -rf .inxi.txt
+    < "$HOME/.inxi.txt" fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
+    rm -rf "$HOME/.inxi.txt"
 	else
 		echo "$INSTALLINGINXIMSG"
     if [ -e /var/lib/pacman/db.lck ]
@@ -196,6 +197,7 @@ function freqinfo() {
 
 # Music Player
 function music() {
+  cd "$HOME"
   if [ -e /usr/bin/cmus ]
   then
     echo -e " $RED Press $BG 1-7 $NC$RED to navigate and $BG Q $NC$RED to return to ToolBox $NC"
