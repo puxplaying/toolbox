@@ -441,14 +441,14 @@ function main {
 
 	# Define Menu entries which will be run with the echo command
 	E0="\e[1mQ\e[0muit"
-	E1="Set Gtk2 Theme"
-	E2="Set Gtk3 Theme"
+	E1="Set GTK2 Theme"
+	E2="Set GTK3 Theme"
 	E3="Set Font"
 	E4="Set Icon Theme"
 	E5="Toggle Dark Theme"
 	E6="Set Pointer Theme"
-	E7="Edit Gtk2 Settings"
-	E8="Edit Gtk3 Settings"
+	E7="Edit GTK2 Settings"
+	E8="Edit GTK3 Settings"
 	E9="Edit Xresources"
 
     while true; do
