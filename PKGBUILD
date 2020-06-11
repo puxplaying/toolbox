@@ -1,8 +1,8 @@
 # Maintainer: Chrysostomus @forum.manjaro.org
-# Maintainer: puxplaying
+# Maintainer: pux @forum.manjaro.org
 
 pkgname=bmenu
-pkgver=0.10
+pkgver=0.11
 pkgrel=1
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=(any)
