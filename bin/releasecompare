@@ -195,7 +195,7 @@ _choise() {
   echo ""
   echo -e "\e[7m Chose the Version to compare \e[0m"
   echo ""
-  echo "  1) Gnome"
+  echo "  1) GNOME"
   echo "  2) KDE"
   echo "  3) XFCE"
   echo "  4) Custom URL (Compare any Edition)"
