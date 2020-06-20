@@ -120,6 +120,8 @@ esac
 }
 # Open results in Meld
 _meld () {
+  if [ -e /usr/bin/meld ] # If file exists
+  then
     echo
     echo -e "\e[1m Do you want to view the results in Meld? \e[0m"
     read -r -p "$1 ([y]es or [N]o): "
@@ -129,6 +131,9 @@ _meld () {
         ;;
         * )     echo -e "\e[1m no \e[0m" ;;
     esac
+  else
+    return
+  fi
 }
 ###
 # Remove Existing Comparison Results
