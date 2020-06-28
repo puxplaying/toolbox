@@ -18,6 +18,8 @@ test -d "$HOME/releasecompare" || mkdir -p "$HOME/releasecompare" && cd $HOME/re
 _custom_URL() {
   printf '\33[H\33[2J'
   echo
+  if [ -e $HOME/releasecompare/release-removed-uninstalled.txt ] # If file exists
+  then
   echo -e "\e[1m Do you want to remove any existing results? (Recommended) \e[0m"
   read -r -p "$1 ([y]es or [N]o): "
   case $(echo "$REPLY" | tr '[:upper:]' '[:lower:]') in
@@ -116,7 +118,51 @@ _custom_URL() {
 
 ;;
 esac
+else
+  echo ""
+  echo -e "Please go to \e[7mhttps://osdn.net/projects/manjaro/storage/\e[0m"
+  echo -e "\e[1m-> Edition\e[0m \e[1m-> Release_Number\e[0m \e[1m-> *pkgs.txt\e[0m and copy the URL."
+  echo ""
+  echo -e "  1) Copy/Paste the URL to *pkgs.txt and press ENTER"
+  echo -e "  0) Quit"
+  read -s -n1 choice
+  case "$choice" in
+          1)
+              echo -e "paste the URL to *pkgs.txt"
+              read -p 'URL: ' uservar
+              wget $uservar
+              file="echo *pkgs.txt"
 
+              # generate list of installed packages
+              pacman -Q > pacman.txt
+
+              # final Comparison
+              cat ${file} | cut -d' ' -f1 > comp1.txt
+              cat pacman.txt | cut -d' ' -f1 > comp2.txt
+              diff -u comp2.txt comp1.txt | grep -E "^\+" | sed '1d'  | cut -c2-  | tee release.txt # Packages from Release which are not installed local
+              diff -u comp1.txt comp2.txt | grep -E "^\+" | sed '1d'  | cut -c2-  | tee userpkglist.txt # Packages installed by User
+
+              # clean up
+              rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt
+
+              _userreleasepkglist
+              printf '\33[H\33[2J'
+              echo ""
+              echo -e "\e[7m The Results Were Saved To: \e[0m"
+              echo -e "\e[1m $HOME/releasecompare \e[0m"
+              echo ""
+              _meld
+              ;;
+
+          0|q)
+              # clean up
+              rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+              ;;
+          * ) echo "invalid option $REPLY"
+              rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+              ;;
+      esac
+fi
 }
 # Open results in Meld
 _meld () {
