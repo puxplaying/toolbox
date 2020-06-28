@@ -244,7 +244,7 @@ _rerun_check () {
 _choise() {
   printf '\33[H\33[2J'
   echo ""
-  echo -e "\e[7m Chose the Version to compare \e[0m"
+  echo -e "\e[7m Choose the Version to compare \e[0m"
   echo ""
   echo "  1) GNOME"
   echo "  2) KDE"
