@@ -19,6 +19,8 @@ md5sums=('SKIP')
 
 package () {
 	cd "$srcdir/toolbox-$pkgver"
+	install -Dm644 "toolbox.desktop" "$pkgdir/usr/share/applications/toolbox.desktop"
+	install -Dm644 "toolbox.png" "$pkgdir/usr/share/pixmaps/toolbox.png"
 	install -dm755 $pkgdir/usr/bin
 	cp -r $srcdir/toolbox-$pkgver/bin $pkgdir/usr
 	#chmod a+x $pkgdir/usr/bin/* # All included scripts should already be set to executable (We can't chmod a symlink)
