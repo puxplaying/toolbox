@@ -2,7 +2,7 @@
 # Maintainer: pux @forum.manjaro.org
 
 pkgname=bmenu
-pkgver=0.13
+pkgver=0.14
 pkgrel=1
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=(any)
