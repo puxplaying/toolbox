@@ -1,8 +1,8 @@
 # Maintainer: Chrysostomus @forum.manjaro.org
-# Maintainer: pux @forum.manjaro.org
+# Maintainer: Georg Wagner (@puxplaying)
 
 pkgname=bmenu
-pkgver=0.14
+pkgver=0.15
 pkgrel=1
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=(any)
@@ -23,5 +23,4 @@ package () {
 	install -Dm644 "toolbox.png" "$pkgdir/usr/share/pixmaps/toolbox.png"
 	install -dm755 $pkgdir/usr/bin
 	cp -r $srcdir/toolbox-$pkgver/bin $pkgdir/usr
-	#chmod a+x $pkgdir/usr/bin/* # All included scripts should already be set to executable (We can't chmod a symlink)
 }
