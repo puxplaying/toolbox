@@ -216,7 +216,7 @@ function music() {
 
 # Check if a website is up via https://isitup.org/
 function geturl() {
-  curl -sL https://isitup.org/"$uservar" | grep data-text= | cut -c 23- | rev | cut -c 11- | rev
+  curl -sL https://isitup.org/"$uservar" | grep data-text= | cut -c 20- | rev | cut -c 11- | rev
 }
 
 function isitup() {
