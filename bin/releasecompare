@@ -26,7 +26,8 @@ _custom_URL() {
       rm -rf $HOME/releasecompare/*
 
       echo ""
-      echo -e "Please go to \e[7mhttps://osdn.net/projects/manjaro/storage/\e[0m"
+      echo -e "For Manjaro Releases:"
+      echo -e "Please go to \e[7mhttps://sourceforge.net/projects/manjarolinux/files/\e[0m"
       echo -e "\e[1m-> Edition\e[0m \e[1m-> Release_Number\e[0m \e[1m-> *pkgs.txt\e[0m and copy the URL."
       echo ""
       echo -e "  1) Copy/Paste the URL to *pkgs.txt and press ENTER"
@@ -36,6 +37,13 @@ _custom_URL() {
       1)
         echo -e "paste the URL to *pkgs.txt"
         read -p 'URL: ' uservar
+
+        # Check if "$uservar" is "sourceforge" to remove the "/download" from the URL
+        if [ "echo "$uservar" | grep 'sourceforge'" ]; then
+          # remove /download from URL
+          uservar=$(echo "$uservar" | rev | cut -c10- | rev)
+        fi
+
         wget $uservar
         file="echo *pkgs.txt"
 
@@ -74,7 +82,8 @@ _custom_URL() {
     *)
       echo -e "\e[1m no \e[0m"
       echo ""
-      echo -e "Please go to \e[7mhttps://osdn.net/projects/manjaro/storage/\e[0m"
+      echo -e "For Manjaro Releases:"
+      echo -e "Please go to \e[7mhttps://sourceforge.net/projects/manjarolinux/files/\e[0m"
       echo -e "\e[1m-> Edition\e[0m \e[1m-> Release_Number\e[0m \e[1m-> *pkgs.txt\e[0m and copy the URL."
       echo ""
       echo -e "  1) Copy/Paste the URL to *pkgs.txt and press ENTER"
@@ -84,6 +93,13 @@ _custom_URL() {
       1)
         echo -e "paste the URL to *pkgs.txt"
         read -p 'URL: ' uservar
+
+        # Check if "$uservar" is "sourceforge" to remove the "/download" from the URL
+        if [ "echo "$uservar" | grep 'sourceforge'" ]; then
+          # remove /download from URL
+          uservar=$(echo "$uservar" | rev | cut -c10- | rev)
+        fi
+
         wget $uservar
         file="echo *pkgs.txt"
 
@@ -124,7 +140,8 @@ _custom_URL() {
     esac
   else
     echo ""
-    echo -e "Please go to \e[7mhttps://osdn.net/projects/manjaro/storage/\e[0m"
+    echo -e "For Manjaro Releases:"
+    echo -e "Please go to \e[7mhttps://sourceforge.net/projects/manjarolinux/files/\e[0m"
     echo -e "\e[1m-> Edition\e[0m \e[1m-> Release_Number\e[0m \e[1m-> *pkgs.txt\e[0m and copy the URL."
     echo ""
     echo -e "  1) Copy/Paste the URL to *pkgs.txt and press ENTER"
@@ -134,6 +151,13 @@ _custom_URL() {
     1)
       echo -e "paste the URL to *pkgs.txt"
       read -p 'URL: ' uservar
+
+      # Check if "$uservar" is "sourceforge" to remove the "/download" from the URL
+      if [ "echo "$uservar" | grep 'sourceforge'" ]; then
+        # remove /download from URL
+        uservar=$(echo "$uservar" | rev | cut -c10- | rev)
+      fi
+
       wget $uservar
       file="echo *pkgs.txt"
 
