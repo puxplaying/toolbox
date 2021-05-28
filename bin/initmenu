@@ -251,7 +251,7 @@ function main {
             ;;
         6)
             echo
-            dmesg
+            sudo dmesg
             echo ""
             pressanykeyrequest
             ;;
