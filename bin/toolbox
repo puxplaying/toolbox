@@ -45,14 +45,12 @@ CMUSNOTINSTMSG="cmus is not installed and Pacman seems to be in use"
 # Main Menu functions
 # PacUI
 function package_manager_ui {
-  if [ -e /usr/bin/pacui ] # If file exists
-  then
-    pacui # Run it
+  if [ -e /usr/bin/pacui ]; then # If file exists
+    pacui                        # Run it
   else
-    echo "$INSTALLINGPACUIMSG" # Install Message
-    if [ -e /var/lib/pacman/db.lck ] # If file exists
-    then
-      echo "$PACUINOTINSTMSG" # Not installed Message
+    echo "$INSTALLINGPACUIMSG"             # Install Message
+    if [ -e /var/lib/pacman/db.lck ]; then # If file exists
+      echo "$PACUINOTINSTMSG"              # Not installed Message
     else
       sudo pacman -Sy pacui && pacui # Else install package and run it
     fi
@@ -61,133 +59,115 @@ function package_manager_ui {
 
 # mhwd-tui
 function hardware_settings {
-	if [ -e /usr/bin/mhwd-tui ]
-  then
-		mhwd-tui
-	else
-		echo "$INSTALLINGMHWDTUIMSG"
-		if [ -e /var/lib/pacman/db.lck ]
-    then
-			echo "$MHWDTUINOTINSTMSG"
-		else
-			sudo pacman -Sy mhwd-tui && mhwd-tui
-		fi
-	fi
+  if [ -e /usr/bin/mhwd-tui ]; then
+    mhwd-tui
+  else
+    echo "$INSTALLINGMHWDTUIMSG"
+    if [ -e /var/lib/pacman/db.lck ]; then
+      echo "$MHWDTUINOTINSTMSG"
+    else
+      sudo pacman -Sy mhwd-tui && mhwd-tui
+    fi
+  fi
 }
 
 # File Manager
 function cli_filemanager {
-	if [ -e /usr/bin/ranger ]
-  then
+  if [ -e /usr/bin/ranger ]; then
     echo -e " $RED Press $BG Q $NC$RED to return to ToolBox $NC"
     sleep 2
-		ranger
-	elif [ -e /usr/bin/mc ]
-  then
-		mc
-	else
-		echo "$INSTALLINGRNG1MSG"
-		if [ -e /var/lib/pacman/db.lck ]
-    then
-			echo "$CLIFMNOTINSTMSG"
-		else
-			sudo pacman -Sy ranger && ranger
-		fi
-	fi
+    ranger
+  elif [ -e /usr/bin/mc ]; then
+    mc
+  else
+    echo "$INSTALLINGRNG1MSG"
+    if [ -e /var/lib/pacman/db.lck ]; then
+      echo "$CLIFMNOTINSTMSG"
+    else
+      sudo pacman -Sy ranger && ranger
+    fi
+  fi
 }
 
 # Web Browser
 function cli_browser {
-	if [ -e /usr/bin/links ]
-  then
-		links
-	elif [ -e /usr/bin/elinks ]
-  then
-		elinks
-	elif [ -e /usr/bin/w3m ]
-  then
-		w3m
-	elif [ -e /usr/bin/lynx ]
-  then
-		lynx
-	else
+  if [ -e /usr/bin/links ]; then
+    links
+  elif [ -e /usr/bin/elinks ]; then
+    elinks
+  elif [ -e /usr/bin/w3m ]; then
+    w3m
+  elif [ -e /usr/bin/lynx ]; then
+    lynx
+  else
     echo "$INSTALLINGCLIBRWOSMSG"
-		if [ -e /var/lib/pacman/db.lck ]
-    then
-			echo "$CLIBROWSNOTINSTMSG"
-		else
-			sudo pacman -Sy links && links
-		fi
-	fi
+    if [ -e /var/lib/pacman/db.lck ]; then
+      echo "$CLIBROWSNOTINSTMSG"
+    else
+      sudo pacman -Sy links && links
+    fi
+  fi
 }
 
 # File Search
 function file_finder {
-	if [ -e /usr/bin/rifle ]
-  then
-		rifle "$(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")"
-	else
-		echo "$INSTALLINGRNG1MSG"
-		if [ -e /var/lib/pacman/db.lck ]
-    then
-			echo "$RIFLENOTINSTMSG"
-		else
-			sudo pacman -Sy ranger && rifle "$(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")"
-		fi
-	fi
+  if [ -e /usr/bin/rifle ]; then
+    rifle "$(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")"
+  else
+    echo "$INSTALLINGRNG1MSG"
+    if [ -e /var/lib/pacman/db.lck ]; then
+      echo "$RIFLENOTINSTMSG"
+    else
+      sudo pacman -Sy ranger && rifle "$(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")"
+    fi
+  fi
 }
 
 # Taskmanager
 function taskmanager {
-	if [ -e /usr/bin/bashtop ]
-  then
-		bashtop
-	else
-		echo "$INSTALLINGTASKMANMSG"
-    if [ -e /var/lib/pacman/db.lck ]
-    then
+  if [ -e /usr/bin/bashtop ]; then
+    bashtop
+  else
+    echo "$INSTALLINGTASKMANMSG"
+    if [ -e /var/lib/pacman/db.lck ]; then
       echo "$TASKMANNOTINSTMSG"
     else
-		  sudo pacman -Sy bashtop && bashtop
+      sudo pacman -Sy bashtop && bashtop
     fi
-	fi
+  fi
 }
 
 # System Information
 function sysinfo {
-  if [ -e /usr/bin/inxi ]
-  then
+  if [ -e /usr/bin/inxi ]; then
     cd "$HOME"
     sudo inxi -v8 | tee "$HOME/.inxi.txt" &>/dev/null
     printf '\33[H\33[2J'
-    < "$HOME/.inxi.txt" fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
+    fzf <"$HOME/.inxi.txt" -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
     rm -rf "$HOME/.inxi.txt"
-	else
-		echo "$INSTALLINGINXIMSG"
-    if [ -e /var/lib/pacman/db.lck ]
-    then
+  else
+    echo "$INSTALLINGINXIMSG"
+    if [ -e /var/lib/pacman/db.lck ]; then
       echo "$INXINOTINSTMSG"
     else
-		  sudo pacman -Sy inxi && inxi -v8 | fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
+      sudo pacman -Sy inxi && inxi -v8 | fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
     fi
-	fi
+  fi
 }
 
 # Cpupower frequency-info
 function freqinfo() {
-  if [ -e /usr/bin/cpupower ]
-  then
+  if [ -e /usr/bin/cpupower ]; then
     cpupower frequency-info
     echo
     echo -e " $RED Displaying frequency-info. To return to ToolBox press ENTER $NC"
     read -r
   else
     echo "$INSTALLINGCPUPOWERMSG"
-    if [ -e /var/lib/pacman/db.lck ]
-    then
+    if [ -e /var/lib/pacman/db.lck ]; then
       echo "$CPUPOWERNOTINSTMSG"
     else
-    	sudo pacman -Sy cpupower && cpupower frequency-info
+      sudo pacman -Sy cpupower && cpupower frequency-info
       echo
       echo -e " $RED Displaying frequency-info. To return to ToolBox press ENTER $NC"
       read -r
@@ -198,18 +178,16 @@ function freqinfo() {
 # Music Player
 function music() {
   cd "$HOME"
-  if [ -e /usr/bin/cmus ]
-  then
+  if [ -e /usr/bin/cmus ]; then
     echo -e " $RED Press $BG 1-7 $NC$RED to navigate and $BG Q $NC$RED to return to ToolBox $NC"
     sleep 3
     cmus
   else
     echo "$INSTALLINGCMUSMSG"
-    if [ -e /var/lib/pacman/db.lck ]
-    then
+    if [ -e /var/lib/pacman/db.lck ]; then
       echo "$CMUSNOTINSTMSG"
     else
-    	sudo pacman -Sy cmus && cmus
+      sudo pacman -Sy cmus && cmus
     fi
   fi
 }
@@ -245,50 +223,49 @@ function releasecompare_startmenu() {
   echo "  1) Compare only"
   echo "  2) Installation Options"
   echo "  0) Quit"
-read -r -n 1 -e choice
-case "$choice" in
-        1)
-            echo "you chose to compare only"
-            releasecompare
-            ;;
-        2)
-            echo "you chose Installation Options"
-            releasecompare install
-            ;;
-        0|3|q|quit)
-            #
-            ;;
-        * ) # do this, if $choice variable contains anything else not offered above
-            echo -e "$ERRORMSG"
-            sleep 2
-            ;;
-    esac
+  read -r -n 1 -e choice
+  case "$choice" in
+  1)
+    echo "you chose to compare only"
+    releasecompare
+    ;;
+  2)
+    echo "you chose Installation Options"
+    releasecompare install
+    ;;
+  0 | 3 | q | quit)
+    #
+    ;;
+  *) # do this, if $choice variable contains anything else not offered above
+    echo -e "$ERRORMSG"
+    sleep 2
+    ;;
+  esac
 }
 
 # =======================
 # Main UI code is below
 #
 function main {
-# Define Menu entries which will be run with the echo command
-E0="\e[1mQ\e[0muit"
-E1="\e[1mP\e[0mackage manager UI"
-E2="System \e[1mI\e[0mnformation"
-E3="\e[1mH\e[0mardware and Drivers"
-E4="\e[1mF\e[0mile Manager"
-E5="\e[1mW\e[0meb Browser"
-E6="File \e[1mS\e[0mearch"
-E7="System & Settings"
-E8="CLI Trans\e[1ml\e[0mator"
-E9="\e[1mR\e[0melease Comparison"
-E10="\e[1mT\e[0mask Manager"
-E11="\e[1mC\e[0mpu Frequency Info"
-E12="System \e[1mD\e[0miagnosis"
-E13="Website Status Check"
-E14="\e[1mM\e[0music Player"
+  # Define Menu entries which will be run with the echo command
+  E0="\e[1mQ\e[0muit"
+  E1="\e[1mP\e[0mackage manager UI"
+  E2="System \e[1mI\e[0mnformation"
+  E3="\e[1mH\e[0mardware and Drivers"
+  E4="\e[1mF\e[0mile Manager"
+  E5="\e[1mW\e[0meb Browser"
+  E6="File \e[1mS\e[0mearch"
+  E7="System & Settings"
+  E8="CLI Trans\e[1ml\e[0mator"
+  E9="\e[1mR\e[0melease Comparison"
+  E10="\e[1mT\e[0mask Manager"
+  E11="\e[1mC\e[0mpu Frequency Info"
+  E12="System \e[1mD\e[0miagnosis"
+  E13="Website Status Check"
+  E14="\e[1mM\e[0music Player"
 
-# Run infinite loop for UI / menu, till the user quits using the "quit" option or CTRL+C.
-while true
-do
+  # Run infinite loop for UI / menu, till the user quits using the "quit" option or CTRL+C.
+  while true; do
 
     printf '\33[H\33[2J' # Use this instead of the clear command
 
@@ -318,92 +295,92 @@ do
     # test, whether "choice" fits any of the following numbers or letters
     case "$choice" in
 
-        1|P|p )
-            package_manager_ui
-            ;;
-        2|I|i )
-            printf '\33[H\33[2J'
-            sysinfo
-            echo
-            echo -e " $RED Displaying System Information. To return to ToolBox press ENTER $NC"
-            # wait for input, e.g. by pressing ENTER:
-            read -r
-            ;;
-        3|H|h )
-            mhwd-tui
-            ;;
-        4|F|f )
-            printf '\33[H\33[2J'
-            cli_filemanager
-            ;;
-        5|W|w )
-            printf '\33[H\33[2J'
-            cli_browser
-            echo
-            echo -e " $RED Displaying Web Browser. To return to ToolBox press ENTER $NC"
-            # wait for input, e.g. by pressing ENTER:
-            read -r
-            ;;
-        6|S|s )
-            cd
-            file_finder
-            echo
-            ;;
-        7 )
-            system-menu
-            ;;
-        8|L|l )
-            printf '\33[H\33[2J'
-            gawk -f <(curl -Ls git.io/translate) -- -shell
-            ;;
-        9|R|r )
-            printf '\33[H\33[2J'
-            releasecompare_startmenu
-            cd
-            echo
-            echo -e " $RED Displaying Releasecompare. To return to ToolBox press ENTER $NC"
-            # wait for input, e.g. by pressing ENTER:
-            read -r
-            ;;
-        T|t )
-            printf '\33[H\33[2J'
-            taskmanager
-            ;;
-        C|c )
-            printf '\33[H\33[2J'
-            freqinfo
-            ;;
-        D|d )
-            diagnosis-menu
-            ;;
-        U|u )
-            printf '\33[H\33[2J'
-            isitup
-            echo
-            echo -e " $RED Displaying Website Status Check. To return to ToolBox press ENTER $NC"
-            read -r
-            ;;
-        M|m )
-            printf '\33[H\33[2J'
-            music
-            ;;
-        + )
-            printf '\33[H\33[2J'
-            randArrayElement "ARRAYISO[@]"
-            sleep 1
-            ;;
-        0|Q|q )
-            printf '\33[H\33[2J' && exit
-            ;;
-        * ) # do this, if $choice variable contains anything else not offered above
-            echo -e "$ERRORMSG"
-            echo -e "$TRYAGAINMSG"
-            sleep 2
-            ;;
+    1 | P | p)
+      package_manager_ui
+      ;;
+    2 | I | i)
+      printf '\33[H\33[2J'
+      sysinfo
+      echo
+      echo -e " $RED Displaying System Information. To return to ToolBox press ENTER $NC"
+      # wait for input, e.g. by pressing ENTER:
+      read -r
+      ;;
+    3 | H | h)
+      mhwd-tui
+      ;;
+    4 | F | f)
+      printf '\33[H\33[2J'
+      cli_filemanager
+      ;;
+    5 | W | w)
+      printf '\33[H\33[2J'
+      cli_browser
+      echo
+      echo -e " $RED Displaying Web Browser. To return to ToolBox press ENTER $NC"
+      # wait for input, e.g. by pressing ENTER:
+      read -r
+      ;;
+    6 | S | s)
+      cd
+      file_finder
+      echo
+      ;;
+    7)
+      system-menu
+      ;;
+    8 | L | l)
+      printf '\33[H\33[2J'
+      gawk -f <(curl -Ls git.io/translate) -- -shell
+      ;;
+    9 | R | r)
+      printf '\33[H\33[2J'
+      releasecompare_startmenu
+      cd
+      echo
+      echo -e " $RED Displaying Releasecompare. To return to ToolBox press ENTER $NC"
+      # wait for input, e.g. by pressing ENTER:
+      read -r
+      ;;
+    T | t)
+      printf '\33[H\33[2J'
+      taskmanager
+      ;;
+    C | c)
+      printf '\33[H\33[2J'
+      freqinfo
+      ;;
+    D | d)
+      diagnosis-menu
+      ;;
+    U | u)
+      printf '\33[H\33[2J'
+      isitup
+      echo
+      echo -e " $RED Displaying Website Status Check. To return to ToolBox press ENTER $NC"
+      read -r
+      ;;
+    M | m)
+      printf '\33[H\33[2J'
+      music
+      ;;
+    +)
+      printf '\33[H\33[2J'
+      randArrayElement "ARRAYISO[@]"
+      sleep 1
+      ;;
+    0 | Q | q)
+      printf '\33[H\33[2J' && exit
+      ;;
+    *) # do this, if $choice variable contains anything else not offered above
+      echo -e "$ERRORMSG"
+      echo -e "$TRYAGAINMSG"
+      sleep 2
+      ;;
 
     esac # close case-loop
 
-
-done # close while-loop
+  done
+  # close while-loop
 }
 main
