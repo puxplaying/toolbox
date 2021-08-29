@@ -13,7 +13,7 @@
 # Make a new folder for the results
 test -d "$HOME/releasecompare" || mkdir -p "$HOME/releasecompare" && cd $HOME/releasecompare
 ###
-# Custom URL to *pkgs.txt
+# Custom URL to *pkgs*
 _custom_URL() {
   printf '\33[H\33[2J'
   echo
@@ -28,14 +28,14 @@ _custom_URL() {
       echo ""
       echo -e "For Manjaro Releases:"
       echo -e "Please go to \e[7mhttps://sourceforge.net/projects/manjarolinux/files/\e[0m"
-      echo -e "\e[1m-> Edition\e[0m \e[1m-> Release_Number\e[0m \e[1m-> *pkgs.txt\e[0m and copy the URL."
+      echo -e "\e[1m-> Edition\e[0m \e[1m-> Release_Number\e[0m \e[1m-> *pkgs*\e[0m and copy the URL."
       echo ""
-      echo -e "  1) Copy/Paste the URL to *pkgs.txt and press ENTER"
+      echo -e "  1) Copy/Paste the URL to *pkgs* and press ENTER"
       echo -e "  0) Quit"
       read -s -n1 choice
       case "$choice" in
       1)
-        echo -e "paste the URL to *pkgs.txt"
+        echo -e "paste the URL to *pkgs*"
         read -p 'URL: ' uservar
 
         # Check if "$uservar" is "sourceforge" to remove the "/download" from the URL
@@ -45,7 +45,7 @@ _custom_URL() {
         fi
 
         wget $uservar
-        file="echo *pkgs.txt"
+        file="echo *pkgs*"
 
         # generate list of installed packages
         pacman -Q >pacman.txt
@@ -57,7 +57,7 @@ _custom_URL() {
         diff -u comp1.txt comp2.txt | grep -E "^\+" | sed '1d' | cut -c2- | tee userpkglist.txt # Packages installed by User
 
         # clean up
-        rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt
+        rm -rf *pkgs* comp1.txt comp2.txt pacman.txt index.html path.txt
 
         _userreleasepkglist
         printf '\33[H\33[2J'
@@ -70,12 +70,12 @@ _custom_URL() {
 
       0 | q)
         # clean up
-        rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+        rm -rf *pkgs* comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
         exit
         ;;
       *)
         echo "invalid option $REPLY"
-        rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+        rm -rf *pkgs* comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
         ;;
       esac
       ;;
@@ -84,14 +84,14 @@ _custom_URL() {
       echo ""
       echo -e "For Manjaro Releases:"
       echo -e "Please go to \e[7mhttps://sourceforge.net/projects/manjarolinux/files/\e[0m"
-      echo -e "\e[1m-> Edition\e[0m \e[1m-> Release_Number\e[0m \e[1m-> *pkgs.txt\e[0m and copy the URL."
+      echo -e "\e[1m-> Edition\e[0m \e[1m-> Release_Number\e[0m \e[1m-> *pkgs*\e[0m and copy the URL."
       echo ""
-      echo -e "  1) Copy/Paste the URL to *pkgs.txt and press ENTER"
+      echo -e "  1) Copy/Paste the URL to *pkgs* and press ENTER"
       echo -e "  0) Quit"
       read -s -n1 choice
       case "$choice" in
       1)
-        echo -e "paste the URL to *pkgs.txt"
+        echo -e "paste the URL to *pkgs*"
         read -p 'URL: ' uservar
 
         # Check if "$uservar" is "sourceforge" to remove the "/download" from the URL
@@ -101,7 +101,7 @@ _custom_URL() {
         fi
 
         wget $uservar
-        file="echo *pkgs.txt"
+        file="echo *pkgs*"
 
         # generate list of installed packages
         pacman -Q >pacman.txt
@@ -113,7 +113,7 @@ _custom_URL() {
         diff -u comp1.txt comp2.txt | grep -E "^\+" | sed '1d' | cut -c2- | tee userpkglist.txt # Packages installed by User
 
         # clean up
-        rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt
+        rm -rf *pkgs* comp1.txt comp2.txt pacman.txt index.html path.txt
 
         _userreleasepkglist
         printf '\33[H\33[2J'
@@ -127,12 +127,12 @@ _custom_URL() {
 
       0 | q)
         # clean up
-        rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+        rm -rf *pkgs* comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
         exit
         ;;
       *)
         echo "invalid option $REPLY"
-        rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+        rm -rf *pkgs* comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
         ;;
       esac
 
@@ -142,14 +142,14 @@ _custom_URL() {
     echo ""
     echo -e "For Manjaro Releases:"
     echo -e "Please go to \e[7mhttps://sourceforge.net/projects/manjarolinux/files/\e[0m"
-    echo -e "\e[1m-> Edition\e[0m \e[1m-> Release_Number\e[0m \e[1m-> *pkgs.txt\e[0m and copy the URL."
+    echo -e "\e[1m-> Edition\e[0m \e[1m-> Release_Number\e[0m \e[1m-> *pkgs*\e[0m and copy the URL."
     echo ""
-    echo -e "  1) Copy/Paste the URL to *pkgs.txt and press ENTER"
+    echo -e "  1) Copy/Paste the URL to *pkgs* and press ENTER"
     echo -e "  0) Quit"
     read -s -n1 choice
     case "$choice" in
     1)
-      echo -e "paste the URL to *pkgs.txt"
+      echo -e "paste the URL to *pkgs*"
       read -p 'URL: ' uservar
 
       # Check if "$uservar" is "sourceforge" to remove the "/download" from the URL
@@ -159,7 +159,7 @@ _custom_URL() {
       fi
 
       wget $uservar
-      file="echo *pkgs.txt"
+      file="echo *pkgs*"
 
       # generate list of installed packages
       pacman -Q >pacman.txt
@@ -171,7 +171,7 @@ _custom_URL() {
       diff -u comp1.txt comp2.txt | grep -E "^\+" | sed '1d' | cut -c2- | tee userpkglist.txt # Packages installed by User
 
       # clean up
-      rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt
+      rm -rf *pkgs* comp1.txt comp2.txt pacman.txt index.html path.txt
 
       _userreleasepkglist
       printf '\33[H\33[2J'
@@ -184,12 +184,12 @@ _custom_URL() {
 
     0 | q)
       # clean up
-      rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+      rm -rf *pkgs* comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
       exit
       ;;
     *)
       echo "invalid option $REPLY"
-      rm -rf *pkgs.txt comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
+      rm -rf *pkgs* comp1.txt comp2.txt pacman.txt index.html path.txt release.txt
       ;;
     esac
   fi
