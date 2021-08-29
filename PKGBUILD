@@ -2,7 +2,7 @@
 # Maintainer: Georg Wagner (@puxplaying)
 
 pkgname=bmenu
-pkgver=0.16
+pkgver=0.17
 pkgrel=1
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=(any)
