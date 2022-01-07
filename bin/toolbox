@@ -42,6 +42,10 @@ INSTALLINGCMUSMSG="Installing cmus to play music"
 CMUSNOTINSTMSG="cmus is not installed and Pacman seems to be in use"
 
 # =======================
+# Pacman installation
+INSTALLPKGS="sudo pacman -Syu"
+
+# =======================
 # Main Menu functions
 # PacUI
 function package_manager_ui {
@@ -52,7 +56,7 @@ function package_manager_ui {
         if [ -e /var/lib/pacman/db.lck ]; then # If file exists
             echo "$PACUINOTINSTMSG"            # Not installed Message
         else
-            sudo pacman -Sy pacui && pacui # Else install package and run it
+            $INSTALLPKGS pacui && pacui # Else install package and run it
         fi
     fi
 }
@@ -66,7 +70,7 @@ function hardware_settings {
         if [ -e /var/lib/pacman/db.lck ]; then
             echo "$MHWDTUINOTINSTMSG"
         else
-            sudo pacman -Sy mhwd-tui && mhwd-tui
+            $INSTALLPKGS mhwd-tui && mhwd-tui
         fi
     fi
 }
@@ -84,7 +88,7 @@ function cli_filemanager {
         if [ -e /var/lib/pacman/db.lck ]; then
             echo "$CLIFMNOTINSTMSG"
         else
-            sudo pacman -Sy ranger && ranger
+            $INSTALLPKGS ranger && ranger
         fi
     fi
 }
@@ -104,7 +108,7 @@ function cli_browser {
         if [ -e /var/lib/pacman/db.lck ]; then
             echo "$CLIBROWSNOTINSTMSG"
         else
-            sudo pacman -Sy links && links
+            $INSTALLPKGS links && links
         fi
     fi
 }
@@ -118,7 +122,7 @@ function file_finder {
         if [ -e /var/lib/pacman/db.lck ]; then
             echo "$RIFLENOTINSTMSG"
         else
-            sudo pacman -Sy ranger && rifle "$(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")"
+            $INSTALLPKGS ranger && rifle "$(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")"
         fi
     fi
 }
@@ -132,7 +136,7 @@ function taskmanager {
         if [ -e /var/lib/pacman/db.lck ]; then
             echo "$TASKMANNOTINSTMSG"
         else
-            sudo pacman -Sy bashtop && bashtop
+            $INSTALLPKGS bashtop && bashtop
         fi
     fi
 }
@@ -150,7 +154,7 @@ function sysinfo {
         if [ -e /var/lib/pacman/db.lck ]; then
             echo "$INXINOTINSTMSG"
         else
-            sudo pacman -Sy inxi && inxi -v8 | fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
+            $INSTALLPKGS inxi && inxi -v8 | fzf -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
         fi
     fi
 }
@@ -167,7 +171,7 @@ function freqinfo() {
         if [ -e /var/lib/pacman/db.lck ]; then
             echo "$CPUPOWERNOTINSTMSG"
         else
-            sudo pacman -Sy cpupower && cpupower frequency-info
+            $INSTALLPKGS cpupower && cpupower frequency-info
             echo
             echo -e " $RED Displaying frequency-info. To return to ToolBox press ENTER $NC"
             read -r
@@ -187,7 +191,7 @@ function music() {
         if [ -e /var/lib/pacman/db.lck ]; then
             echo "$CMUSNOTINSTMSG"
         else
-            sudo pacman -Sy cmus && cmus
+            $INSTALLPKGS cmus && cmus
         fi
     fi
 }
