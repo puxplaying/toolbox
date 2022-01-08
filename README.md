@@ -10,7 +10,7 @@ How to install:
 - ```makepkg -srci```
 
 How to run:
-- ```toolbox```
+- ```bmenu```
 
 ---
 
