@@ -17,7 +17,7 @@ optdepends=('cmatrix: Needed for ToolBox'
 provides=('mhwd-tui')
 conflicts=('mhwd-tui')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-sha256sums=('ee925090eb4f0a40179e0a7d69956fdc6e45de753c9387465c06f992cfc0a2a1')
+sha256sums=('6c8d189ecd9ee06992e1717d3d400156704a343abf95d5051ae552c035bcc4a7')
 
 prepare() {
   cd "toolbox-$pkgver"
