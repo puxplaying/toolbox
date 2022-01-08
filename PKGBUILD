@@ -1,26 +1,38 @@
 # Maintainer: Chrysostomus @forum.manjaro.org
-# Maintainer: Georg Wagner (@puxplaying)
+# Maintainer: Georg Wagner <puxplaying_at_gmail_dot_com>
+# Maintainer: Mark Wagie <mark_at_manjaro_dot_org>
 
 pkgname=bmenu
-pkgver=0.17
+pkgver=0.18
 pkgrel=1
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
-arch=(any)
-url="https://github.com/puxplaying/toolbox/" # By changing this to "https://github.com/$YourAccount/toolbox" you should be able to release packages on your Github fork!
+arch=('any')
+url="https://github.com/puxplaying/toolbox/"
 license=('GPL3')
-depends=('pacui' 'pacman-contrib' 'expac' 'sudo' 'fzf' 'ncdu' 'gawk' 'bash' 'sed' 'xorg-xinput' 'inxi' 'cpupower' 'ranger' 'curl' 'powertop' 'cmus' 'mhwd' 'lshw' 'lm_sensors' 'dmidecode')
-makedepends=('git')
-conflicts=("mhwd-tui")
-provides=("mhwd-tui")
+depends=('pacui' 'pacman-contrib' 'expac' 'sudo' 'fzf' 'ncdu' 'gawk' 'bash' 'sed'
+         'xorg-xinput' 'inxi' 'cpupower' 'ranger' 'curl' 'powertop' 'cmus' 'mhwd'
+         'lshw' 'lm_sensors' 'dmidecode')
 optdepends=('cmatrix: Needed for ToolBox'
-	    'meld: Needed for diff operations')
-source=("$url/archive/$pkgver.tar.gz")
-md5sums=('SKIP')
+            'meld: Needed for diff operations')
+provides=('mhwd-tui')
+conflicts=('mhwd-tui')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
+sha256sums=('ee925090eb4f0a40179e0a7d69956fdc6e45de753c9387465c06f992cfc0a2a1')
+
+prepare() {
+  cd "toolbox-$pkgver"
+
+  # toolbox script conflicts with Arch community toolbox package
+  mv -f bin/toolbox "bin/$pkgname"
+  sed -i "s/Exec=toolbox/Exec=$pkgname/g" toolbox.desktop
+}
 
 package () {
-	cd "$srcdir/toolbox-$pkgver"
-	install -Dm644 "toolbox.desktop" "$pkgdir/usr/share/applications/toolbox.desktop"
-	install -Dm644 "toolbox.png" "$pkgdir/usr/share/pixmaps/toolbox.png"
-	install -dm755 $pkgdir/usr/bin
-	cp -r $srcdir/toolbox-$pkgver/bin $pkgdir/usr
+  cd "toolbox-$pkgver"
+  install -d "$pkgdir/usr/bin/"
+  cp -r bin/* "$pkgdir/usr/bin/"
+  chmod a+x $pkgdir/usr/bin/*
+
+  install -Dm644 toolbox.desktop -t "$pkgdir/usr/share/applications/"
+  install -Dm644 toolbox.png -t "$pkgdir/usr/share/pixmaps/"
 }
