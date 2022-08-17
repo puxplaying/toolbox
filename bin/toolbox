@@ -3,8 +3,6 @@
 # =======================
 # Define Colors
 RED='\e[41m'
-BLUE='\e[44m'
-ORANGE='\e[46m'
 NC='\e[0m' # No color
 BG='\e[7m' # Highlighting Background color
 TC='\e[1m' # Highlighting Text color
@@ -162,7 +160,7 @@ function sysinfo {
 # Cpupower frequency-info
 function freqinfo() {
     if [ -e /usr/bin/cpupower ]; then
-        cpupower frequency-info
+        sudo cpupower frequency-info
         echo
         echo -e " $RED Displaying frequency-info. To return to ToolBox press ENTER $NC"
         read -r
@@ -171,7 +169,7 @@ function freqinfo() {
         if [ -e /var/lib/pacman/db.lck ]; then
             echo "$CPUPOWERNOTINSTMSG"
         else
-            $INSTALLPKGS cpupower && cpupower frequency-info
+            $INSTALLPKGS cpupower && sudo cpupower frequency-info
             echo
             echo -e " $RED Displaying frequency-info. To return to ToolBox press ENTER $NC"
             read -r
@@ -255,11 +253,11 @@ function main {
     E0="\e[1mQ\e[0muit"
     E1="\e[1mP\e[0mackage manager UI"
     E2="System \e[1mI\e[0mnformation"
-    E3="\e[1mH\e[0mardware and Drivers"
-    E4="\e[1mF\e[0mile Manager"
-    E5="\e[1mW\e[0meb Browser"
+    E3="\e[1mH\e[0mardware & Drivers"
+    E4="System & Settings"
+    E5="\e[1mF\e[0mile Manager"
     E6="File \e[1mS\e[0mearch"
-    E7="System & Settings"
+    E7="\e[1mW\e[0meb Browser"
     E8="CLI Trans\e[1ml\e[0mator"
     E9="\e[1mR\e[0melease Comparison"
     E10="\e[1mT\e[0mask Manager"
@@ -278,11 +276,11 @@ function main {
         echo -e " $TC+----------------------------------------------------------------+$NC"
         echo -e " $TC|$NC    $BG 1 $NC $E1      $TC|$NC    $BG 2 $NC $E2     $TC|$NC"
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
-        echo -e " $TC|$NC    $BG 3 $NC $E3    $TC|$NC    $BG 4 $NC $E4           $TC|$NC"
+        echo -e " $TC|$NC    $BG 3 $NC $E3      $TC|$NC    $BG 4 $NC $E4      $TC|$NC"
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
-        echo -e " $TC|$NC    $BG 5 $NC $E5             $TC|$NC    $BG 6 $NC $E6            $TC|$NC"
+        echo -e " $TC|$NC    $BG 5 $NC $E5            $TC|$NC    $BG 6 $NC $E6            $TC|$NC"
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
-        echo -e " $TC|$NC    $BG 7 $NC $E7 $NC      $TC|$NC    $BG 8 $NC $E8         $TC|$NC"
+        echo -e " $TC|$NC    $BG 7 $NC $E7 $NC            $TC|$NC    $BG 8 $NC $E8         $TC|$NC"
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
         echo -e " $TC|$NC    $BG 9 $NC $E9 $TC     |$NC    $BG T $NC $E10           $TC|$NC"
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
@@ -313,25 +311,25 @@ function main {
         3 | H | h)
             mhwd-tui
             ;;
-        4 | F | f)
+        4)
+            system-menu
+            ;;
+        5 | F | f)
             printf '\33[H\33[2J'
             cli_filemanager
-            ;;
-        5 | W | w)
-            printf '\33[H\33[2J'
-            cli_browser
-            echo
-            echo -e " $RED Displaying Web Browser. To return to ToolBox press ENTER $NC"
-            # wait for input, e.g. by pressing ENTER:
-            read -r
             ;;
         6 | S | s)
             cd
             file_finder
             echo
             ;;
-        7)
-            system-menu
+        7 | W | w)
+            printf '\33[H\33[2J'
+            cli_browser
+            echo
+            echo -e " $RED Displaying Web Browser. To return to ToolBox press ENTER $NC"
+            # wait for input, e.g. by pressing ENTER:
+            read -r
             ;;
         8 | L | l)
             printf '\33[H\33[2J'
