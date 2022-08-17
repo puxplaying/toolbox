@@ -9,8 +9,12 @@ How to install:
 - ```cd toolbox```
 - ```makepkg -srci```
 
-How to run:
-- ```bmenu```
+How to use:
+- click on the *ToolBox* icon in the menu 
+
+  <img src="https://github.com/puxplaying/toolbox/blob/master/toolbox.png" alt="toolbox" width="50" height="50" /> 
+
+- or run it via ```bmenu```
 
 ---
 
