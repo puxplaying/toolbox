@@ -196,9 +196,9 @@ function music() {
     fi
 }
 
-# Check if a website is up via https://isitup.org/
+# Check if a website is up via "ping"
 function geturl() {
-    curl -sL https://isitup.org/"$uservar" | grep data-text= | cut -c 19- | rev | cut -c 11- | rev
+    ping -c1 "$uservar"
 }
 
 function isitup() {
@@ -206,7 +206,11 @@ function isitup() {
     echo -e "For example: \e[7mforum.manjaro.org\e[0m"
     read -p 'URL: ' uservar
     echo ""
-    echo -e "\e[1m $(geturl) \e[0m"
+    if ping -c1 -W1 "$uservar" &>/dev/null; then
+        echo -e " Yay\e[1m $uservar \e[0mis up!"
+    else
+        echo -e " Oh no\e[1m $uservar \e[0mseems to be down!"
+    fi
     echo ""
 }
 
