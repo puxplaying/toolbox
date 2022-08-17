@@ -3,7 +3,7 @@
 # Maintainer: Mark Wagie <mark_at_manjaro_dot_org>
 
 pkgname=bmenu
-pkgver=0.18
+pkgver=0.19
 pkgrel=1
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=('any')
@@ -17,7 +17,7 @@ optdepends=('cmatrix: Needed for ToolBox'
 provides=('mhwd-tui')
 conflicts=('mhwd-tui')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-sha256sums=('6c8d189ecd9ee06992e1717d3d400156704a343abf95d5051ae552c035bcc4a7')
+sha256sums=('8b4790377ce8af14ecb9e6e3935628ff67ec6e22aacc5c511b3431fa35b83638')
 
 prepare() {
   cd "toolbox-$pkgver"
