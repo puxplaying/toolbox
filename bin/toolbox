@@ -197,10 +197,6 @@ function music() {
 }
 
 # Check if a website is up via "ping"
-function geturl() {
-    ping -c1 "$uservar"
-}
-
 function isitup() {
     echo -e "Please type in the URL and press ENTER"
     echo -e "For example: \e[7mforum.manjaro.org\e[0m"
