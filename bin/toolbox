@@ -15,9 +15,9 @@ TRYAGAINMSG=" Please try again..."
 # File Manager (Ranger)
 INSTALLINGRNG1MSG="Installing ranger to manage files"
 CLIFMNOTINSTMSG="No cli filemanager is installed and Pacman seems to be in use"
-# Task Manager (bashtop)
-INSTALLINGTASKMANMSG="Installing bashtop to manage tasks"
-TASKMANNOTINSTMSG="Bashtop is not installed and Pacman seems to be in use"
+# Task Manager (btop)
+INSTALLINGTASKMANMSG="Installing btop to manage tasks"
+TASKMANNOTINSTMSG="Btop is not installed and Pacman seems to be in use"
 # File Search (Rifle)
 RIFLENOTINSTMSG="Rifle is not installed and Pacman seems to be in use"
 # Web Browser (Links)
@@ -127,14 +127,14 @@ function file_finder {
 
 # Taskmanager
 function taskmanager {
-    if [ -e /usr/bin/bashtop ]; then
-        bashtop
+    if [ -e /usr/bin/btop ]; then
+        btop
     else
         echo "$INSTALLINGTASKMANMSG"
         if [ -e /var/lib/pacman/db.lck ]; then
             echo "$TASKMANNOTINSTMSG"
         else
-            $INSTALLPKGS bashtop && bashtop
+            $INSTALLPKGS btop && btop
         fi
     fi
 }
