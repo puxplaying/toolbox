@@ -19,3 +19,10 @@ How to use:
 ---
 
 ![1](https://user-images.githubusercontent.com/28549766/185100401-a39bf9fe-4995-420e-847e-bd7b69567d73.png)
+
+
+---
+
+**Note:**
+
+All of my projects which contain a PKGBUILD in the repository, can be automatically kept up to date with [Autogit](https://github.com/puxplaying/autogit).
