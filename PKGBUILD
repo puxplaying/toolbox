@@ -1,11 +1,11 @@
-# Maintainer: Chrysostomus <forum.manjaro.org/u/Chrysostomus>
 # Maintainer: Georg Wagner <puxplaying_at_gmail_dot_com>
 # Maintainer: Mark Wagie <mark_at_manjaro_dot_org>
+# Contributor: Chrysostomus <forum.manjaro.org/u/Chrysostomus>
 # Contributor: konung-yaropolk <https://github.com/konung-yaropolk>
 
 pkgname=bmenu
 pkgver=0.24
-pkgrel=1
+pkgrel=2
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=('any')
 url="https://github.com/puxplaying/toolbox/"
@@ -28,13 +28,17 @@ depends=(
   'pacman-contrib'
   'pacui'
   'powertop'
-  'ranger'
   'sed'
   'sudo'
   'xorg-xinput'
 )
-optdepends=('cmatrix: Needed for ToolBox'
-            'meld: Needed for diff operations')
+optdepends=(
+  'cmatrix: Enter The Matrix'
+  'cups: Manage printers'
+  'sane: Manage scanners'
+  'meld: Diff operations'
+  'ranger: File manager operations'
+)
 provides=('mhwd-tui')
 conflicts=('mhwd-tui')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
@@ -43,7 +47,7 @@ sha256sums=('dc1c5f0c3ae556e9a47ff26cafad952af43da8c52a362371db8df60bb760cc53')
 prepare() {
   cd "toolbox-$pkgver"
 
-  # toolbox script conflicts with Arch community toolbox package
+  # toolbox script conflicts with Arch extra toolbox package
   mv -f bin/toolbox "bin/$pkgname"
   sed -i "s/Exec=toolbox/Exec=$pkgname/g" toolbox.desktop
 }
