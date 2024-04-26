@@ -27,6 +27,10 @@ function system_diagnosis_ui {
   ERRORMSG="$RED Wrong option $NC"
   TRYAGAINMSG=" Please try again..."
 
+  # =======================
+# Pacman installation
+INSTALLPKGS="sudo pacman -Syu"
+
   # Run infinite loop for UI / menu, till the user quits using the "quit" option or CTRL+C.
   while true
   do
@@ -156,7 +160,7 @@ function system_diagnosis_ui {
               then
               echo "cmatrix is not installed and Pacman seems to be in use"
               else
-              sudo pacman -Sy cmatrix && cmatrix
+              $INSTALLPKGS cmatrix && cmatrix
               fi
               fi
               ;;
