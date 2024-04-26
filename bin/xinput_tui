@@ -4,8 +4,6 @@
 # =======================
 # Define Colors
 RED='\e[41m'
-BLUE='\e[44m'
-ORANGE='\e[46m'
 NC='\e[0m' # No color
 BG='\e[7m' # Highlighting Background color
 TC='\e[1m' # Highlighting Text color
@@ -15,6 +13,10 @@ TC='\e[1m' # Highlighting Text color
 # Wrong Option
 ERRORMSG="$RED Wrong option $NC"
 TRYAGAINMSG=" Please try again..."
+
+# =======================
+# Pacman installation
+INSTALLPKGS="sudo pacman -Syu"
 
 
 touchpad_id=$(xinput --list | grep -i "Touchpad" | xargs -n 1 | grep "id=" | sed 's/id=//g')
@@ -135,7 +137,7 @@ function gui {
 			if [ -e /var/lib/pacman/db.lck ]; then
 				echo "Pacman seems to be currently in use."
 			else
-				sudo pacman -Sy lxinput && lxinput &>/dev/null
+				$INSTALLPKGS lxinput && lxinput &>/dev/null
 			fi
 		fi
 	fi

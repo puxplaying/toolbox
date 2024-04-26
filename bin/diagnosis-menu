@@ -3,8 +3,6 @@
 # =======================
 # Define Colors
 RED='\e[41m'
-BLUE='\e[44m'
-ORANGE='\e[46m'
 NC='\e[0m' # No color
 BG='\e[7m' # Highlighting Background color
 TC='\e[1m' # Highlighting Text color
@@ -77,7 +75,7 @@ function system_diagnosis_ui {
               printf '\33[H\33[2J'
               if [[ -f $HOME/.zhistory ]]
               then
-              cat $HOME/.zhistory | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              cat "$HOME"/.zhistory | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
               else
               echo ".zhistory not found"
               fi
@@ -90,7 +88,7 @@ function system_diagnosis_ui {
               printf '\33[H\33[2J'
               if [[ -f $HOME/.bash_history ]]
               then
-              cat $HOME/.bash_history | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              cat "$HOME"/.bash_history | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
               else
               echo ".bash_history not found"
               fi
@@ -109,9 +107,9 @@ function system_diagnosis_ui {
               ;;
           6|D|d )
               printf '\33[H\33[2J'
-              sudo dmesg | less | tee $HOME/.dmesg.txt
+              sudo dmesg | less | tee "$HOME"/.dmesg.txt
               cat .dmesg.txt | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
-              rm -rf $HOME/.dmesg.txt
+              rm -rf "$HOME"/.dmesg.txt
               echo
               echo -e " $RED Displaying Dmesg. To return to System Diagnosis press ENTER $NC"
               # wait for input, e.g. by pressing ENTER:
@@ -125,7 +123,7 @@ function system_diagnosis_ui {
               else
               if [[ -f $HOME/.local/share/xorg/Xorg.0.log ]]
               then
-              cat $HOME/.local/share/xorg/Xorg.0.log | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
+              cat "$HOME"/.local/share/xorg/Xorg.0.log | fzf -e +s --tac --reverse --multi --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. "
               fi
               fi
               echo
