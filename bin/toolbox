@@ -46,7 +46,7 @@ INSTALLPKGS="sudo pacman -Syu"
 # =======================
 # Main Menu functions
 # PacUI
-function package_manager_ui {
+function package_manager_ui() {
     if [ -e /usr/bin/pacui ]; then # If file exists
         pacui                      # Run it
     else
@@ -60,7 +60,7 @@ function package_manager_ui {
 }
 
 # mhwd-tui
-function hardware_settings {
+function hardware_settings() {
     if [ -e /usr/bin/mhwd-tui ]; then
         mhwd-tui
     else
@@ -74,7 +74,7 @@ function hardware_settings {
 }
 
 # File Manager
-function cli_filemanager {
+function cli_filemanager() {
     if [ -e /usr/bin/ranger ]; then
         echo -e " $RED Press $BG Q $NC$RED to return to ToolBox $NC"
         sleep 2
@@ -92,7 +92,7 @@ function cli_filemanager {
 }
 
 # Web Browser
-function cli_browser {
+function cli_browser() {
     if [ -e /usr/bin/links ]; then
         links
     elif [ -e /usr/bin/elinks ]; then
@@ -112,7 +112,7 @@ function cli_browser {
 }
 
 # File Search
-function file_finder {
+function file_finder() {
     if [ -e /usr/bin/rifle ]; then
         rifle "$(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")"
     else
@@ -126,7 +126,7 @@ function file_finder {
 }
 
 # Taskmanager
-function taskmanager {
+function taskmanager() {
     if [ -e /usr/bin/btop ]; then
         btop
     else
@@ -140,9 +140,9 @@ function taskmanager {
 }
 
 # System Information
-function sysinfo {
+function sysinfo() {
     if [ -e /usr/bin/inxi ]; then
-        cd "$HOME"
+        cd "$HOME" || exit
         sudo inxi -v8 | tee "$HOME/.inxi.txt" &>/dev/null
         printf '\33[H\33[2J'
         fzf <"$HOME/.inxi.txt" -i --multi --reverse --info=inline --prompt="Enter string > " --header="TAB key to (un)select. ENTER to view selection. ESC to quit. " --no-unicode
@@ -179,7 +179,7 @@ function freqinfo() {
 
 # Music Player
 function music() {
-    cd "$HOME"
+    cd "$HOME" || exit
     if [ -e /usr/bin/cmus ]; then
         echo -e " $RED Press $BG 1-7 $NC$RED to navigate and $BG Q $NC$RED to return to ToolBox $NC"
         sleep 3
@@ -248,7 +248,7 @@ function releasecompare_startmenu() {
 # =======================
 # Main UI code is below
 #
-function main {
+function main() {
     # Define Menu entries which will be run with the echo command
     E0="\e[1mQ\e[0muit"
     E1="\e[1mP\e[0mackage manager UI"
