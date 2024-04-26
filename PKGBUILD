@@ -4,7 +4,7 @@
 # Contributor: konung-yaropolk <https://github.com/konung-yaropolk>
 
 pkgname=bmenu
-pkgver=0.22
+pkgver=0.23
 pkgrel=1
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=('any')
@@ -38,7 +38,7 @@ optdepends=('cmatrix: Needed for ToolBox'
 provides=('mhwd-tui')
 conflicts=('mhwd-tui')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-sha256sums=('d4d16a09feec754041630c37795b71d9aa9239784815f2c86edc5422bbade8da')
+sha256sums=('d0c9c877c8c993097b0708d016a63c50f6c72f5261158fd1fd1ee81781fbb0f6')
 
 prepare() {
   cd "toolbox-$pkgver"
