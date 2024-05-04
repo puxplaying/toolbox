@@ -96,23 +96,23 @@ mhwd-kernel -li | awk 'NR==1 {print $4}' | tr -d '()' >.running_kernel &
 mhwd-kernel -li | awk 'NR > 2 { print $2}' >.installed_kernels &
 mhwd-kernel -l | awk 'NR > 1 { print $2}' >.available_kernels &
 
-# Define Menu entries which will be run with the echo command
-E0="\e[1mQ\e[0muit"
-E1="\e[1mI\e[0mnstall a Kernel"
-E2="\e[1mR\e[0memove a Kernel"
-E3="Use \e[1mF\e[0mree Graphics"
-E4="Use \e[1mN\e[0monfree Graphics"
-E5="\e[1mL\e[0mist Installed Drivers"
-E6="\e[1mC\e[0monfigure Touchpad"
-E7="\e[1mS\e[0mystem Temperatures"
-E8="\e[1mD\e[0misk Usage"
-E9="\e[1mH\e[0mome Folder Usage"
-E10="\e[1mB\e[0mios Information"
-E11="P\e[1mo\e[0mwer Consumption"
-E12="\e[1mP\e[0mrinters"
-
 # Run infinite loop for UI / menu, till the user quits using the "quit" option or CTRL+C.
 while true; do
+
+    # Define Menu entries which will be run with the echo command
+    E0="\e[1mQ\e[0muit"
+    E1="\e[1mI\e[0mnstall a Kernel"
+    E2="\e[1mR\e[0memove a Kernel"
+    E3="Use \e[1mF\e[0mree Graphics"
+    E4="Use \e[1mN\e[0monfree Graphics"
+    E5="\e[1mL\e[0mist Installed Drivers"
+    E6="\e[1mC\e[0monfigure Touchpad"
+    E7="\e[1mS\e[0mystem Temperatures"
+    E8="\e[1mD\e[0misk Usage"
+    E9="\e[1mH\e[0mome Folder Usage"
+    E10="\e[1mB\e[0mios Information"
+    E11="P\e[1mo\e[0mwer Consumption"
+    E12="\e[1mP\e[0mrinters"
 
     printf '\33[H\33[2J' # Use this instead of the clear command
 

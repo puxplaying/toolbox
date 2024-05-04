@@ -10,8 +10,8 @@ TC='\e[1m' # Highlighting Text color
 # =======================
 # Service messages section
 # Wrong Option
-ERRORMSG="$RED Wrong.$NC"
-TRYAGAINMSG="$RED Press any key and try again$NC"
+ERRORMSG="$RED Wrong option $NC"
+TRYAGAINMSG=" Please try again..."
 #
 if [ "$(cat /proc/1/comm)" = "systemd" ]; then
 	systemctl status NetworkManager.service 2>/dev/null | grep -q " active " && netcommand="nmtui"
@@ -30,15 +30,46 @@ function init_settings() {
 	fi
 }
 
-E0="\e[1mQ\e[0muit"
-E1="\e[1mA\e[0mppearance"
-E2="\e[1mN\e[0metwork"
-E3="System \e[1mC\e[0monfiguration"
-E4="\e[1mI\e[0mnit-System"
+# Startmenu for releasecompare
+function releasecompare_startmenu() {
+	echo ""
+	echo -e "$TC This tool will compare the release package list of Manjaro, $NC"
+	echo -e "$TC or any Arch based distro to the local system. $NC"
+	echo ""
+	echo "  1) Compare only"
+	echo "  2) Installation Options"
+	echo "  0) Quit"
+	read -r -n 1 -e choice
+	case "$choice" in
+	1)
+		echo "you chose to compare only"
+		releasecompare
+		;;
+	2)
+		echo "you chose Installation Options"
+		releasecompare install
+		;;
+	0 | 3 | q | quit)
+		#
+		;;
+	*) # do this, if $choice variable contains anything else not offered above
+		echo -e "$ERRORMSG"
+		sleep 2
+		;;
+	esac
+}
 
 function main() {
 	# Run infinite loop for UI / menu, till the user quits using the "quit" option or CTRL+C.
 	while true; do
+
+		# Define Menu entries which will be run with the echo command
+		E0="\e[1mQ\e[0muit"
+		E1="\e[1mA\e[0mppearance"
+		E2="\e[1mN\e[0metwork"
+		E3="System \e[1mC\e[0monfiguration"
+		E4="\e[1mI\e[0mnit-System"
+		E5="\e[1mR\e[0melease Comparison"
 
 		printf '\33[H\33[2J' # Use this instead of the clear command
 
@@ -48,6 +79,8 @@ function main() {
 		echo -e " $TC|$NC    $BG 1 $NC $E1              $TC|$NC    $BG 2 $NC $E2                $TC|$NC"
 		echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
 		echo -e " $TC|$NC    $BG 3 $NC $E3    $TC|$NC    $BG 4 $NC $E4            $TC|$NC"
+		echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
+		echo -e " $TC|$NC    $BG 5 $NC $E5      $TC|$NC    $BG$TC T $NC$BG$TC O $NC$BG$TC O $NC$BG$TC L $NC $BG B $NC $BG O $NC $BG X $NC   $TC|$NC"
 		echo -e " $TC+----------------------------------------------------------------+$NC"
 		echo ""
 		echo -e "  Enter marked number or letter   -    $BG 0 $NC $E0 "
@@ -77,6 +110,15 @@ function main() {
 			echo
 			init_settings
 			echo ""
+			;;
+		5 | R | r)
+			printf '\33[H\33[2J'
+			releasecompare_startmenu
+			cd || exit
+			echo
+			echo -e " $RED Displaying Releasecompare. To return to System & Settings press ENTER $NC"
+			# wait for input, e.g. by pressing ENTER:
+			read -r
 			;;
 		0 | Q | q)
 			printf '\33[H\33[2J' && exit

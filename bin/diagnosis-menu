@@ -9,6 +9,7 @@ TC='\e[1m' # Highlighting Text color
 
 # System Diagnosis Menu
 function system_diagnosis_ui() {
+    
     # Define Menu entries which will be run with the echo command
     E0="\e[1mQ\e[0muit"
     E1="\e[1mP\e[0macman Log Search"

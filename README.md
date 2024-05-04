@@ -18,7 +18,7 @@ How to use:
 
 ---
 
-![1](https://user-images.githubusercontent.com/28549766/185100401-a39bf9fe-4995-420e-847e-bd7b69567d73.png)
+![1](https://github.com/puxplaying/toolbox/assets/28549766/3fd23f57-17c7-4868-86fb-05216bcf4c1f)
 
 
 ---

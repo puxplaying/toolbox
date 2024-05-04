@@ -1,0 +1,125 @@
+#!/bin/bash
+
+# Dialog UI - main function
+function main() {
+
+    # Messages Main UI
+    BACKTITLE="Press SPACE For Auto Completion / ESC To Quit"
+    TITEL1="Select Source File Or Folder For $compression Compression"
+    TITEL2="Select Destiantion And Name"
+    MSGBOX1="Compression With $compression Was Successful!"
+    MSGBOX2="Compression With $compression Failed!"
+    MSGBOX3="Please Install $compression First!"
+
+    # Dialog UI - Source folder or file selection which will be saved inside the "$source_dir" variable
+    source_dir=$(dialog --begin 2 30 --backtitle "$BACKTITLE" \
+        --stdout --title "$TITEL1" --fselect "$HOME/" 10 50) # Create UI which shows "$BACKTITLE" and "$TITEL1"
+    if [ -z "$source_dir" ]; then                            # If variable is empty, go back
+        return
+    fi
+
+    # Dialog UI - Destination folder and filename selection which will be saved inside the "$destination_dir" variable
+    destination_dir=$(dialog --begin 2 30 --backtitle "$BACKTITLE" \
+        --stdout --title "$TITEL2" --fselect "$HOME/" 10 50) # Create UI which shows "$BACKTITLE" and "$TITEL2"
+    if [ -z "$destination_dir" ]; then                       # If variable is empty, go back
+        return
+    fi
+
+    # Dialog UI - 7z PASSWD + No List + No Compression
+    if [ "$compression" == "7z" ]; then
+        if [ -x "$(command -v 7za)" ]; then # If 7z is installed
+            printf '\33[H\33[2J'
+            if time 7za u -m0=Copy -mhe -p "$destination_dir".7z "$source_dir"; then # Start and time the compression
+                dialog --msgbox "$MSGBOX1" 6 45                                      # Display success message
+                exit
+            else
+                echo ""
+                dialog --msgbox "$MSGBOX2" 6 45 # Dispaly error message if compression failed
+                exit 1
+            fi
+        else
+            dialog --msgbox "$MSGBOX3" 6 45 # Display info to install missing compression tool
+            exit 2
+        fi
+    fi
+
+    # Dialog UI - Fast tar with no compression and progress bar
+    if [ "$compression" == "tar" ]; then
+        if [ -x "$(command -v tar)" ]; then
+            printf '\33[H\33[2J'
+            if compr=$(tar -c "$source_dir" | pv -s $(($(du -sk "$source_dir" | awk '{print $1}') * 1024)) >"$destination_dir".tar); then
+                time $compr                     # Start and time the compression
+                dialog --msgbox "$MSGBOX1" 6 45 # Display success message
+                exit
+            else
+                echo ""
+                dialog --msgbox "$MSGBOX2" 6 45 # Dispaly error message if compression failed
+                exit 1
+            fi
+        else
+            dialog --msgbox "$MSGBOX3" 6 45 # Display info to install missing compression tool
+            exit 2
+        fi
+    fi
+
+    # Dialog UI - Fast zstd compression
+    if [ "$compression" == "zstd" ]; then
+        if [ -x "$(command -v zstd)" ]; then
+            printf '\33[H\33[2J'
+            if time tar --zstd -vcf "$destination_dir".tar.zst "$source_dir"; then # Start and time the compression
+                dialog --msgbox "$MSGBOX1" 6 45                                    # Display success message
+                exit
+            else
+                echo ""
+                dialog --msgbox "$MSGBOX2" 6 45 # Dispaly error message if compression failed
+                exit 1
+            fi
+        else
+            dialog --msgbox "$MSGBOX3" 6 45 # Display info to install missing compression tool
+            exit 2
+        fi
+    fi
+}
+
+# Dialog UI - Startmenu
+function selectmenu() {
+
+    # Messages Startmenu
+    TITEL="The Quickest File Compressor"
+    MENU="Please Select The Compression"
+    # Items Startmenu
+    SEVENZ="<7z> No Compression + PASSWD (Slowest)"
+    TAR="<Tar> No Compression (Fastest)"
+    ZSTD="<Zstd> Fast Compression (Best Compromise)"
+
+    items=(1 "$SEVENZ"
+        2 "$TAR"
+        3 "$ZSTD")
+
+    # Create UI which shows "$TITLE" and "$MENU"
+    while choice=$(
+        dialog --title "$TITEL" \
+            --menu "$MENU" 10 55 3 "${items[@]}" \
+            2>&1 >/dev/tty
+    ); do
+        # Select method and save choise in the "$compression" variable
+        case $choice in
+        1)
+            compression=7z
+            main
+            ;;
+        2)
+            compression=tar
+            main
+            ;;
+        3)
+            compression=zstd
+            main
+            ;;
+        *) ;; # some action on other
+        esac
+    done
+    #clear # clear after user pressed Cancel
+}
+
+selectmenu

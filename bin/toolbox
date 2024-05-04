@@ -214,41 +214,9 @@ function randArrayElement() {
     echo -e "${arr["$((RANDOM % ${#arr[@]}))"]}"
 }
 
-# =======================
-# Sub Menu's
-# Startmenu for releasecompare
-function releasecompare_startmenu() {
-    echo ""
-    echo -e "$TC This tool will compare the release package list of Manjaro, $NC"
-    echo -e "$TC or any Arch based distro to the local system. $NC"
-    echo ""
-    echo "  1) Compare only"
-    echo "  2) Installation Options"
-    echo "  0) Quit"
-    read -r -n 1 -e choice
-    case "$choice" in
-    1)
-        echo "you chose to compare only"
-        releasecompare
-        ;;
-    2)
-        echo "you chose Installation Options"
-        releasecompare install
-        ;;
-    0 | 3 | q | quit)
-        #
-        ;;
-    *) # do this, if $choice variable contains anything else not offered above
-        echo -e "$ERRORMSG"
-        sleep 2
-        ;;
-    esac
-}
-
-# =======================
 # Main UI code is below
-#
 function main() {
+
     # Define Menu entries which will be run with the echo command
     E0="\e[1mQ\e[0muit"
     E1="\e[1mP\e[0mackage manager UI"
@@ -257,9 +225,9 @@ function main() {
     E4="System & Settings"
     E5="\e[1mF\e[0mile Manager"
     E6="File \e[1mS\e[0mearch"
-    E7="\e[1mW\e[0meb Browser"
+    E7="Fast File Compression"
     E8="CLI Trans\e[1ml\e[0mator"
-    E9="\e[1mR\e[0melease Comparison"
+    E9="\e[1mW\e[0meb Browser"
     E10="\e[1mT\e[0mask Manager"
     E11="\e[1mC\e[0mpu Frequency Info"
     E12="System \e[1mD\e[0miagnosis"
@@ -280,9 +248,9 @@ function main() {
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
         echo -e " $TC|$NC    $BG 5 $NC $E5            $TC|$NC    $BG 6 $NC $E6            $TC|$NC"
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
-        echo -e " $TC|$NC    $BG 7 $NC $E7 $NC            $TC|$NC    $BG 8 $NC $E8         $TC|$NC"
+        echo -e " $TC|$NC    $BG 7 $NC $E7 $NC  $TC|$NC    $BG 8 $NC $E8         $TC|$NC"
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
-        echo -e " $TC|$NC    $BG 9 $NC $E9 $TC     |$NC    $BG T $NC $E10           $TC|$NC"
+        echo -e " $TC|$NC    $BG 9 $NC $E9 $TC            |$NC    $BG T $NC $E10           $TC|$NC"
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
         echo -e " $TC|$NC    $BG C $NC $E11      $TC|$NC    $BG D $NC $E12       $TC|$NC"
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
@@ -319,28 +287,24 @@ function main() {
             cli_filemanager
             ;;
         6 | S | s)
-            cd
+            cd || exit
             file_finder
             echo
             ;;
-        7 | W | w)
+        7)
             printf '\33[H\33[2J'
-            cli_browser
+            fastcompress-tui
             echo
-            echo -e " $RED Displaying Web Browser. To return to ToolBox press ENTER $NC"
-            # wait for input, e.g. by pressing ENTER:
-            read -r
             ;;
         8 | L | l)
             printf '\33[H\33[2J'
             gawk -f <(curl -Ls git.io/translate) -- -shell
             ;;
-        9 | R | r)
+        9 | W | w)
             printf '\33[H\33[2J'
-            releasecompare_startmenu
-            cd
+            cli_browser
             echo
-            echo -e " $RED Displaying Releasecompare. To return to ToolBox press ENTER $NC"
+            echo -e " $RED Displaying Web Browser. To return to ToolBox press ENTER $NC"
             # wait for input, e.g. by pressing ENTER:
             read -r
             ;;
