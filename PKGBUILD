@@ -4,8 +4,8 @@
 # Contributor: konung-yaropolk <https://github.com/konung-yaropolk>
 
 pkgname=bmenu
-pkgver=0.24
-pkgrel=2
+pkgver=0.25
+pkgrel=1
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=('any')
 url="https://github.com/puxplaying/toolbox/"
@@ -16,6 +16,7 @@ depends=(
   'cmus'
   'cpupower'
   'curl'
+  'dialog'
   'dmidecode'
   'expac'
   'fzf'
@@ -38,11 +39,14 @@ optdepends=(
   'sane: Manage scanners'
   'meld: Diff operations'
   'ranger: File manager operations'
+  'p7zip: Fast 7z file compression with password protection'
+  'tar: Fast Tar file compression'
+  'zstd: Fast Zstd file comression'
 )
 provides=('mhwd-tui')
 conflicts=('mhwd-tui')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-sha256sums=('dc1c5f0c3ae556e9a47ff26cafad952af43da8c52a362371db8df60bb760cc53')
+sha256sums=('db97221ef6ec84ac30691a30cfde69742d076edd026adae85103a8a95dbc5fa4')
 
 prepare() {
   cd "toolbox-$pkgver"
