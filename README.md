@@ -19,10 +19,3 @@ How to use:
 ---
 
 ![1](https://github.com/puxplaying/toolbox/assets/28549766/3fd23f57-17c7-4868-86fb-05216bcf4c1f)
-
-
----
-
-**Note:**
-
-All of my projects which contain a PKGBUILD in the repository, can be automatically kept up to date with [Autogit](https://github.com/puxplaying/autogit).
