@@ -4,6 +4,10 @@ Bash scripts providing a collection of terminal applications in a simple UI for 
 - https://github.com/Chrysostomus/bmenu
 
 How to install:
+
+This package is available on [Manjaro](https://packages.manjaro.org/?query=bmenu).
+
+From source:
 - ```sudo pacman -Syu base-devel git```
 - ```git clone https://github.com/puxplaying/toolbox.git```
 - ```cd toolbox```
