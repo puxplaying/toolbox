@@ -4,7 +4,7 @@
 # Contributor: konung-yaropolk <https://github.com/konung-yaropolk>
 
 pkgname=bmenu
-pkgver=0.25
+pkgver=0.26
 pkgrel=1
 pkgdesc="Bash scripts providing a collection of terminal applications in a simple UI"
 arch=('any')
@@ -45,7 +45,7 @@ optdepends=(
   'zstd: Fast Zstd file comression'
 )
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-sha256sums=('db97221ef6ec84ac30691a30cfde69742d076edd026adae85103a8a95dbc5fa4')
+sha256sums=('c952483cf855ca305abc94153885b0cf6670ce626d78c00c5872b390c48577bb')
 
 prepare() {
   cd "toolbox-$pkgver"
