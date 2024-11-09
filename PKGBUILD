@@ -24,13 +24,12 @@ depends=(
   'inxi'
   'lm_sensors'
   'lshw'
-  'mhwd'
   'ncdu'
   'pacman-contrib'
-  'pacui'
   'powertop'
   'sed'
   'sudo'
+  'wget'
   'xorg-xinput'
 )
 optdepends=(
@@ -38,13 +37,13 @@ optdepends=(
   'cups: Manage printers'
   'sane: Manage scanners'
   'meld: Diff operations'
-  'ranger: File manager operations'
+  'mhwd: Manjaro Linux Hardware Detection'
+  'pacui: Package Manager UI'
   'p7zip: Fast 7z file compression with password protection'
+  'ranger: File manager operations'
   'tar: Fast Tar file compression'
   'zstd: Fast Zstd file comression'
 )
-provides=('mhwd-tui')
-conflicts=('mhwd-tui')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
 sha256sums=('db97221ef6ec84ac30691a30cfde69742d076edd026adae85103a8a95dbc5fa4')
 
