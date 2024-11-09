@@ -1,6 +1,11 @@
 #!/bin/bash
 
 # =======================
+# Local vars
+DISABLEPACUI=0
+DISABLEMHWD=0
+
+# =======================
 # Define Colors
 RED='\e[41m'
 NC='\e[0m' # No color
@@ -26,9 +31,7 @@ CLIBROWSNOTINSTMSG="No cli browser installed and Pacman seems to be in use"
 # PacUI
 INSTALLINGPACUIMSG="Installing PacUI for package management"
 PACUINOTINSTMSG="PacUI is not installed and Pacman seems to be in use"
-# mhwd-tui
-INSTALLINGMHWDTUIMSG="Installing mhwd-tui to manage kernels and drivers"
-MHWDTUINOTINSTMSG="Mhwd-tui is not installed and Pacman seems to be in use"
+PACUIFAILEDINSTMSG="Failed to install PacUI"
 # inxi
 INSTALLINGINXIMSG="Installing inxi to display system information"
 INXINOTINSTMSG="inxi is not installed and Pacman seems to be in use"
@@ -47,39 +50,50 @@ INSTALLPKGS="sudo pacman -Syu"
 # Main Menu functions
 # PacUI
 function package_manager_ui() {
-    if [ -e /usr/bin/pacui ]; then # If file exists
-        pacui                      # Run it
+    if [ -x "$(command -v pacui)" ]; then # If command exists
+        pacui                             # Run it
     else
         echo "$INSTALLINGPACUIMSG"             # Install Message
         if [ -e /var/lib/pacman/db.lck ]; then # If file exists
             echo "$PACUINOTINSTMSG"            # Not installed Message
         else
-            $INSTALLPKGS pacui && pacui # Else install package and run it
-        fi
-    fi
-}
+            if $INSTALLPKGS pacui && pacui; then # Else install package and run it
+                DISABLEPACUI=0
+                echo "installed" &>/dev/null
+            else
+                echo -e " \e[41m Installation failed, do you want to download PacUI from source? [Y|n] \e[0m"
+                read -r -n 1 -e answer # save user input in "answer" variable (only accept 1 character as input)
 
-# mhwd-tui
-function hardware_settings() {
-    if [ -e /usr/bin/mhwd-tui ]; then
-        mhwd-tui
-    else
-        echo "$INSTALLINGMHWDTUIMSG"
-        if [ -e /var/lib/pacman/db.lck ]; then
-            echo "$MHWDTUINOTINSTMSG"
-        else
-            $INSTALLPKGS mhwd-tui && mhwd-tui
+                case ${answer:-n} in # if ENTER is pressed, the variable "answer" is empty. if "answer" is empty, its default value is "no".
+                y | Y)               # do this, if "answer" is y or Y.
+
+                    PACUISOURCE=https://raw.githubusercontent.com/excalibur1234/pacui/master/pacui
+                    PACUITMPDIR=/tmp/toolbox
+                    PACUIDOWNLOAD=$(mkdir -p "$PACUITMPDIR" && wget -O "$PACUITMPDIR/pacui" "$PACUISOURCE" && chmod +x "$PACUITMPDIR/pacui")
+
+                    if $PACUIDOWNLOAD && sh "$PACUITMPDIR/pacui"; then
+                        DISABLEPACUI=3
+                        PACUIFROMSOURCE=1
+                    fi
+                    ;;
+                *) # do this in all other cases
+                    DISABLEPACUI=2
+                    PACUIFAILEDINSTALL=1
+                    echo "$PACUIFAILEDINSTMSG"
+                    ;;
+                esac # end of "case" loop
+            fi
         fi
     fi
 }
 
 # File Manager
 function cli_filemanager() {
-    if [ -e /usr/bin/ranger ]; then
+    if [ -x "$(command -v ranger)" ]; then
         echo -e " $RED Press $BG Q $NC$RED to return to ToolBox $NC"
         sleep 2
         ranger
-    elif [ -e /usr/bin/mc ]; then
+    elif [ -x "$(command -v mc)" ]; then
         mc
     else
         echo "$INSTALLINGRNG1MSG"
@@ -93,13 +107,13 @@ function cli_filemanager() {
 
 # Web Browser
 function cli_browser() {
-    if [ -e /usr/bin/links ]; then
+    if [ -x "$(command -v links)" ]; then
         links
-    elif [ -e /usr/bin/elinks ]; then
+    elif [ -x "$(command -v elinks)" ]; then
         elinks
-    elif [ -e /usr/bin/w3m ]; then
+    elif [ -x "$(command -v w3m)" ]; then
         w3m
-    elif [ -e /usr/bin/lynx ]; then
+    elif [ -x "$(command -v lynx)" ]; then
         lynx
     else
         echo "$INSTALLINGCLIBRWOSMSG"
@@ -113,7 +127,7 @@ function cli_browser() {
 
 # File Search
 function file_finder() {
-    if [ -e /usr/bin/rifle ]; then
+    if [ -x "$(command -v rifle)" ]; then
         rifle "$(find -type f | fzf -e --reverse --prompt="Enter string > " --header="ESC to quit. ")"
     else
         echo "$INSTALLINGRNG1MSG"
@@ -127,7 +141,7 @@ function file_finder() {
 
 # Taskmanager
 function taskmanager() {
-    if [ -e /usr/bin/btop ]; then
+    if [ -x "$(command -v btop)" ]; then
         btop
     else
         echo "$INSTALLINGTASKMANMSG"
@@ -141,7 +155,7 @@ function taskmanager() {
 
 # System Information
 function sysinfo() {
-    if [ -e /usr/bin/inxi ]; then
+    if [ -x "$(command -v inxi)" ]; then
         cd "$HOME" || exit
         sudo inxi -v8 | tee "$HOME/.inxi.txt" &>/dev/null
         printf '\33[H\33[2J'
@@ -159,7 +173,7 @@ function sysinfo() {
 
 # Cpupower frequency-info
 function freqinfo() {
-    if [ -e /usr/bin/cpupower ]; then
+    if [ -x "$(command -v cpupower)" ]; then
         sudo cpupower frequency-info
         echo
         echo -e " $RED Displaying frequency-info. To return to ToolBox press ENTER $NC"
@@ -180,7 +194,7 @@ function freqinfo() {
 # Music Player
 function music() {
     cd "$HOME" || exit
-    if [ -e /usr/bin/cmus ]; then
+    if [ -x "$(command -v cmus)" ]; then
         echo -e " $RED Press $BG 1-7 $NC$RED to navigate and $BG Q $NC$RED to return to ToolBox $NC"
         sleep 3
         cmus
@@ -239,12 +253,35 @@ function main() {
 
         printf '\33[H\33[2J' # Use this instead of the clear command
 
+        # Check if Pacui is installed for a different text
+        if ! [ -x "$(command -v pacui)" ] && [ "$PACUIFAILEDINSTALL" == "1" ]; then
+            DISABLEPACUI=2
+        else
+            if [ "$PACUIFROMSOURCE" == "1" ]; then
+                DISABLEPACUI=3
+            else
+                if ! [ -x "$(command -v pacui)" ]; then
+                    DISABLEPACUI=1
+                fi
+            fi
+        fi
+
+        # Check if "mhwd" is installed for a different text
+        if ! [ -x "$(command -v mhwd)" ]; then
+            DISABLEMHWD=1
+        fi
+
         echo
         echo -e "                      $BG$TC T $NC$BG$TC O $NC$BG$TC O $NC$BG$TC L $NC $BG B $NC $BG O $NC $BG X $NC"
         echo -e " $TC+----------------------------------------------------------------+$NC"
-        echo -e " $TC|$NC    $BG 1 $NC $E1      $TC|$NC    $BG 2 $NC $E2     $TC|$NC"
+        #echo -e " $TC|$NC    $BG 1 $NC $E1      $TC|$NC    $BG 2 $NC $E2     $TC|$NC"
+        [[ "$DISABLEPACUI" == "0" ]] && echo -e " $TC|$NC    $BG 1 $NC $E1      $TC|$NC    $BG 2 $NC $E2     $TC|$NC"
+        [[ "$DISABLEPACUI" == "1" ]] && echo -e " $TC|$NC    $BG 1 $NC [PacUI] (Not Installed) $TC|$NC    $BG 2 $NC $E2     $TC|$NC"
+        [[ "$DISABLEPACUI" == "2" ]] && echo -e " $TC|$NC    $BG$TC T $NC$BG$TC O $NC$BG$TC O $NC$BG$TC L $NC $BG B $NC $BG O $NC $BG X $NC    $TC|$NC    $BG 2 $NC $E2     $TC|$NC"
+        [[ "$DISABLEPACUI" == "3" ]] && echo -e " $TC|$NC    $BG 1 $NC $E1      $TC|$NC    $BG 2 $NC $E2     $TC|$NC"
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
-        echo -e " $TC|$NC    $BG 3 $NC $E3      $TC|$NC    $BG 4 $NC $E4      $TC|$NC"
+        [[ "$DISABLEMHWD" == "0" ]] && echo -e " $TC|$NC    $BG 3 $NC $E3      $TC|$NC    $BG 4 $NC $E4      $TC|$NC"
+        [[ "$DISABLEMHWD" == "1" ]] && echo -e " $TC|$NC    $BG 3 $NC [mhwd] (Not Installed)  $TC|$NC    $BG 4 $NC $E4      $TC|$NC"
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
         echo -e " $TC|$NC    $BG 5 $NC $E5            $TC|$NC    $BG 6 $NC $E6            $TC|$NC"
         echo -e " $TC|$NC--------------------------------$TC|$NC-------------------------------$TC|$NC"
@@ -266,7 +303,9 @@ function main() {
         case "$choice" in
 
         1 | P | p)
-            package_manager_ui
+            [[ "$DISABLEPACUI" == "0" ]] && package_manager_ui
+            [[ "$DISABLEPACUI" == "1" ]] && package_manager_ui
+            [[ "$DISABLEPACUI" == "3" ]] && sh "$PACUITMPDIR/pacui"
             ;;
         2 | I | i)
             printf '\33[H\33[2J'
@@ -277,7 +316,7 @@ function main() {
             read -r
             ;;
         3 | H | h)
-            mhwd-tui
+            [[ "$DISABLEMHWD" == "0" ]] && mhwd-tui
             ;;
         4)
             system-menu
@@ -336,6 +375,7 @@ function main() {
             sleep 1
             ;;
         0 | Q | q)
+            [[ "$PACUIFROMSOURCE" == "1" ]] && rm -rf "$PACUITMPDIR" &>/dev/null
             printf '\33[H\33[2J' && exit
             ;;
         *) # do this, if $choice variable contains anything else not offered above
